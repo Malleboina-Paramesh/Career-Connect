@@ -13,7 +13,9 @@ Introducing Carrier Connect: This website mainly focus on placements and opportu
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![Mongodb](https://img.shields.io/badge/Mongodb-%2347A248.svg?style=for-the-badge&logo=Mongodb&logoColor=white)
 
+#### CONTRIBUTING GUIDELINES: [click here](./CONTRIBUTING.md)
 ### Our Contributors🎓
 <a href="https://github.com/Malleboina-Paramesh/Carrier-Connect/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=Malleboina-Paramesh/Carrier-Connect" />
 </a>
+

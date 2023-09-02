@@ -1,5 +1,5 @@
 # Carrier-Connect
-Introducing Carrier Connect: This website mainly focus on placements and opportunities. Website provides comprehensive training resources to help participants excel.it serves as an invaluable resource for both off-campus and on-campus placement updates, guiding students on how to prepare and succeed in interviews with top companies like Google and others. Ultimately, your web page aims to empower students with the knowledge and tools they need to secure promising career opportunities in the tech industry.
+Introducing Carrier Connect: This website mainly focus on placements and opportunities. Website provides comprehensive training resources to help participants excel.it serves as an valuable resource for both off-campus and on-campus placement updates, guiding students on how to prepare and succeed in interviews with top companies like Google and others. Ultimately, your web page aims to empower students with the knowledge and tools they need to secure promising career opportunities in the tech industry.
 <div align="center">
 <h1>CARRIER CONNECT</h1>
 </div>
@@ -12,6 +12,8 @@ Introducing Carrier Connect: This website mainly focus on placements and opportu
 ![Angular](https://img.shields.io/badge/Angular-%23ff0000.svg?style=for-the-badge&logo=Angular&logoColor=white)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![Mongodb](https://img.shields.io/badge/Mongodb-%2347A248.svg?style=for-the-badge&logo=Mongodb&logoColor=white)
+### Learning Resource
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML">![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)</a>
 
 #### CONTRIBUTING GUIDELINES: [click here](./CONTRIBUTING.md)
 ### Our Contributors🎓

@@ -6,7 +6,7 @@ Introducing Carrier Connect: This website mainly focus on placements and opportu
 
 ### On What stack will Carrier Connect built on?
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![Sass](https://img.shields.io/badge/Sass-%23ff69b4.svg?style=for-the-badge&logo=Sass&logoColor=white)
+![Css](https://img.shields.io/badge/Css-%23ff69b4.svg?style=for-the-badge&logo=Css&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![TypeScript](https://img.shields.io/badge/TypeScript-%230073ec.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-%23ff0000.svg?style=for-the-badge&logo=Angular&logoColor=white)

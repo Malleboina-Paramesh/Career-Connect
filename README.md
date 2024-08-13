@@ -1,18 +1,58 @@
-# Career-Connect
+# Turborepo Tailwind CSS starter
 
-### On What stack will Career Connect built on?
-![Next.js](https://img.shields.io/badge/Next.js-%23000000.svg?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![Shadcn UI](https://img.shields.io/badge/Shadcn_UI-%23323F4B.svg?style=for-the-badge&logo=shadcnui&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-%230073ec.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-%2306B6D4.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![React Query](https://img.shields.io/badge/React_Query-%23FF4154.svg?style=for-the-badge&logo=react-query&logoColor=white)
-![Express](https://img.shields.io/badge/Express-%23000000.svg?style=for-the-badge&logo=express&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%23336791.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+This is an official starter Turborepo.
 
+## Using this example
 
-#### CONTRIBUTING GUIDELINES: [click here](./CONTRIBUTING.md)
-### Our Contributors🎓
-<a href="https://github.com/Malleboina-Paramesh/Carrier-Connect/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=Malleboina-Paramesh/Carrier-Connect" />
-</a>
+Run the following command:
 
+```sh
+npx create-turbo@latest -e with-tailwind
+```
+
+## What's inside?
+
+This Turborepo includes the following packages/apps:
+
+### Apps and Packages
+
+- `docs`: a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
+- `web`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
+- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+
+### Building packages/ui
+
+This example is set up to produce compiled styles for `ui` components into the `dist` directory. The component `.tsx` files are consumed by the Next.js apps directly using `transpilePackages` in `next.config.js`. This was chosen for several reasons:
+
+- Make sharing one `tailwind.config.js` to apps and packages as easy as possible.
+- Make package compilation simple by only depending on the Next.js Compiler and `tailwindcss`.
+- Ensure Tailwind classes do not overwrite each other. The `ui` package uses a `ui-` prefix for it's classes.
+- Maintain clear package export boundaries.
+
+Another option is to consume `packages/ui` directly from source without building. If using this option, you will need to update the `tailwind.config.js` in your apps to be aware of your package locations, so it can find all usages of the `tailwindcss` class names for CSS compilation.
+
+For example, in [tailwind.config.js](packages/tailwind-config/tailwind.config.js):
+
+```js
+  content: [
+    // app content
+    `src/**/*.{js,ts,jsx,tsx}`,
+    // include packages if not transpiling
+    "../../packages/ui/*.{js,ts,jsx,tsx}",
+  ],
+```
+
+If you choose this strategy, you can remove the `tailwindcss` and `autoprefixer` dependencies from the `ui` package.
+
+### Utilities
+
+This Turborepo has some additional tools already setup for you:
+
+- [Tailwind CSS](https://tailwindcss.com/) for styles
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting

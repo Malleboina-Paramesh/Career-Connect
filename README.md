@@ -1,58 +1,165 @@
-# Turborepo Tailwind CSS starter
+<p align="">
+  <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" alt="shadcn/ui">
+  <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" alt="Prisma">
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white" alt="Turborepo">
+  <img src="https://img.shields.io/badge/npm_Workspaces-000000?style=for-the-badge&logo=npm&logoColor=white" alt="npm Workspaces">
+</p>
 
-This is an official starter Turborepo.
+# Career-Connect
 
-## Using this example
+Connect students with career opportunities using our modern, scalable web platform.
 
-Run the following command:
+## Table of Contents
 
-```sh
-npx create-turbo@latest -e with-tailwind
-```
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [For Fullstack Developers](#for-fullstack-developers)
+  - [For Backend Developers](#for-backend-developers)
+- [Database Operations](#database-operations)
+- [Working with Common Packages](#working-with-common-packages)
+- [Contributing](#contributing)
+- [License](#license)
+- [Deployment](#deployment)
 
-## What's inside?
+## Tech Stack
 
-This Turborepo includes the following packages/apps:
+- Next.js
+- TypeScript
+- Shadcn UI
+- Prisma ORM
+- PostgreSQL / SQLite
+- Node.js
+- Express.js
+- Tailwind CSS
+- Turborepo
+- npm Workspaces
 
-### Apps and Packages
+## Project Structure
 
-- `docs`: a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `web`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+The project is organized into multiple workspaces:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Frontends
 
-### Building packages/ui
+- Admin Dashboard
+- Student Portal
 
-This example is set up to produce compiled styles for `ui` components into the `dist` directory. The component `.tsx` files are consumed by the Next.js apps directly using `transpilePackages` in `next.config.js`. This was chosen for several reasons:
+### Common Packages
 
-- Make sharing one `tailwind.config.js` to apps and packages as easy as possible.
-- Make package compilation simple by only depending on the Next.js Compiler and `tailwindcss`.
-- Ensure Tailwind classes do not overwrite each other. The `ui` package uses a `ui-` prefix for it's classes.
-- Maintain clear package export boundaries.
+- TypeScript Configuration
+- Tailwind Configuration
+- UI Components (Shadcn UI)
+- Common Types
+- Database (Prisma)
 
-Another option is to consume `packages/ui` directly from source without building. If using this option, you will need to update the `tailwind.config.js` in your apps to be aware of your package locations, so it can find all usages of the `tailwindcss` class names for CSS compilation.
+## Features
 
-For example, in [tailwind.config.js](packages/tailwind-config/tailwind.config.js):
+- Student profile creation and management
+- Job and internship listings
+- Application tracking
+- Company profiles and job posting
+- Admin dashboard for platform management
+- Real-time notifications
+- Analytics and reporting
+- Upcoming...
 
-```js
-  content: [
-    // app content
-    `src/**/*.{js,ts,jsx,tsx}`,
-    // include packages if not transpiling
-    "../../packages/ui/*.{js,ts,jsx,tsx}",
-  ],
-```
+## Getting Started
 
-If you choose this strategy, you can remove the `tailwindcss` and `autoprefixer` dependencies from the `ui` package.
+### Prerequisites
 
-### Utilities
+- Node.js (version 18 or higher)
+- pnpm (version 8.15.6 or higher)
 
-This Turborepo has some additional tools already setup for you:
+### For Fullstack Developers
 
-- [Tailwind CSS](https://tailwindcss.com/) for styles
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+1. Install dependencies:
+
+   ```
+   pnpm install
+   ```
+
+2. Run all services:
+   ```
+   pnpm dev
+   ```
+
+### For Backend Developers
+
+1. Install dependencies:
+
+   ```
+   pnpm install
+   ```
+
+2. Run backend services:
+   ```
+   pnpm backend:dev
+   ```
+
+## Database Operations
+
+- Preview database:
+
+  ```
+  pnpm db:studio
+  ```
+
+- Sync database schema:
+
+  ```
+  pnpm db:generate
+  ```
+
+- Push schema changes to database:
+  ```
+  pnpm db:push
+  ```
+
+## Working with Common Packages
+
+### Common Types
+
+To add or modify common types:
+
+1. Navigate to `packages/types`
+2. Add or modify type definitions
+3. These types will be available to all parts of the project
+
+### UI Components
+
+To add or modify common UI components:
+
+1. Navigate to `packages/ui`
+2. Add or modify components
+3. These components can be reused across all frontends
+
+### Database Schema
+
+To make changes to the database schema:
+
+1. Navigate to `packages/database`
+2. Modify the Prisma schema file
+3. Run `pnpm db:generate` to update types
+4. Run `pnpm db:push` to sync changes with the database
+
+## Contributing
+
+We welcome contributions to Career-Connect! Please follow these steps to contribute:
+
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature/your-feature-name`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Submit a pull request
+
+## Deployment
+
+Instructions for deploying Career-Connect will be added here as the project progresses. We plan to support deployment on various cloud platforms and containerized environments.

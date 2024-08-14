@@ -2,20 +2,30 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "start": "turbo start",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "clean": "turbo clean",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev": "turbo dev",
+    "backend:dev": "pnpm --filter api dev",
+    "ui:add": "pnpm --filter @local/ui ui:add",
+    "db:studio": "pnpm --filter @local/database db:studio",
+    "db:push": "pnpm --filter @local/database db:push",
+    "db:generate": "pnpm --filter @local/database db:generate",
+    "db:migrate": "pnpm --filter @local/database db:migrate",
+    "db:up": "pnpm --filter @local/database db:up"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "turbo": "^2.0.12"
+    "turbo": "^2.0.12",
+    "@local/eslint-config": "workspace:*",
+    "@local/typescript-config": "workspace:*"
   },
   "packageManager": "pnpm@8.15.6",
   "engines": {
     "node": ">=18"
   },
-  "name": "with-tailwind"
+  "name": "Career-Connect"
 }

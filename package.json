@@ -14,7 +14,9 @@
     "db:push": "pnpm --filter @local/database db:push",
     "db:generate": "pnpm --filter @local/database db:generate",
     "db:migrate": "pnpm --filter @local/database db:migrate",
-    "db:up": "pnpm --filter @local/database db:up"
+    "db:up": "pnpm --filter @local/database db:up",
+    "student:dev": "pnpm --filter students dev",
+    "admin:dev": "pnpm --filter admins dev"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

@@ -22,7 +22,9 @@ Connect students with career opportunities using our modern, scalable web platfo
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [For Fullstack Developers](#for-fullstack-developers)
+  - [Setup](#setup)
+  - [For Frontend and Fullstack Developers](#for-frontend-and-fullstack-developers)
+  - [Running Specific Services](#running-specific-services)
   - [For Backend Developers](#for-backend-developers)
 - [Database Operations](#database-operations)
 - [Working with Common Packages](#working-with-common-packages)
@@ -75,34 +77,92 @@ The project is organized into multiple workspaces:
 
 ### Prerequisites
 
-- Node.js (version 18 or higher)
-- pnpm (version 8.15.6 or higher)
+1. Install Node.js (version 18 or higher):
 
-### For Fullstack Developers
+   - Download and install from [nodejs.org](https://nodejs.org/)
 
-1. Install dependencies:
+2. Install pnpm globally using npm:
+   ```
+   npm install -g pnpm
+   ```
+
+### Setup
+
+1. Clone the project:
+
+   ```
+   git clone https://github.com/Malleboina-Paramesh/Career-Connect.git
+   ```
+
+2. Change to the project directory:
+
+   ```
+   cd Career-Connect
+   ```
+
+3. Install dependencies:
 
    ```
    pnpm install
    ```
 
-2. Run all services:
+4. Set up environment variables:
+
+   - In the `students`, `admins`, `api`, and `database` (package) folders, you'll find `.env.example` files.
+   - Create a new `.env` file in each of these folders.
+   - Copy the contents from the corresponding `.env.example` file to the new `.env` file.
+   - Adjust the values in the `.env` files as needed for your environment.
+
+5. Configure the database:
+
+   - By default, the project uses SQLite, which doesn't require additional configuration.
+   - To use PostgreSQL:
+     - Open `packages/database/prisma/schema.prisma`
+     - Comment out the SQLite URL and uncomment the PostgreSQL URL
+     - Change the `provider` to `"postgresql"`
+   - To switch back to SQLite, reverse these changes.
+
+6. Generate types from schema:
+
    ```
-   pnpm dev
+   pnpm db:generate
    ```
+
+7. Push the schema to the database:
+   ```
+   pnpm db:push
+   ```
+
+### For Frontend and Fullstack Developers
+
+Run all services:
+
+```
+pnpm dev
+```
+
+### Running Specific Frontends
+
+To run only one frontend:
+
+- For the student frontend:
+
+  ```
+  pnpm student:dev
+  ```
+
+- For the admin frontend:
+  ```
+  pnpm admin:dev
+  ```
 
 ### For Backend Developers
 
-1. Install dependencies:
+Run backend services:
 
-   ```
-   pnpm install
-   ```
-
-2. Run backend services:
-   ```
-   pnpm backend:dev
-   ```
+```
+pnpm backend:dev
+```
 
 ## Database Operations
 
@@ -122,6 +182,7 @@ The project is organized into multiple workspaces:
   ```
   pnpm db:push
   ```
+  - Every time you change the schema, make sure to reload the project e.g. `ctrl + shift + p` and type <b>reload window</b> which works in vscode else close and open the project.
 
 ## Working with Common Packages
 
@@ -149,6 +210,12 @@ To make changes to the database schema:
 2. Modify the Prisma schema file
 3. Run `pnpm db:generate` to update types
 4. Run `pnpm db:push` to sync changes with the database
+
+### Changing The Turbo Terminal UI
+
+1. Go to `turbo.json`
+2. change the value for the key ui from`tui` to `stream` or `stream` to `tui`
+3. Reload the project or reopen the project
 
 ## Contributing
 

@@ -8,7 +8,9 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "declaration": false,
+    "declarationMap": false
   },
   "include": [
     "next-env.d.ts",

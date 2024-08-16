@@ -3,27 +3,189 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  // url      = env("DATABASE_URL") // for postgres db
-  url      = "file:./dev.db" // for sqlite db
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // for postgres db
+  // url      = "file:./dev.db" // for sqlite db
+}
+
+enum Role {
+  GLOBAL_ADMIN
+  ADMIN
+  STUDENT
+  MENTOR
+}
+
+enum MentorType {
+  MENTOR
+  TRAINER
+  ADVISOR
+}
+
+enum ADMIN_ROLE {
+  GLOBAL // will have access to everything
+  MENTOR // will able to add mentors
+  STUDENT // will able ro add students
+  COURSE // can create courses
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String
-  name      String?
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified DateTime @map("email_verified")
+  password      String?
+  role          Role
+  isVerified    Boolean  @default(false) @map("is_verified")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // for all users this is common
+  Profile Profile?
+
+  //based on the role he has
+  Student Student?
+  Mentor  Mentor?
+  Admin   Admin?
+
+  accounts Account[] // this is for auth providers like google, facebook, etc (do not touch)
+
+  @@map("users")
 }
 
-model Post {
+model Admin {
+  id        String     @id @default(cuid())
+  role      ADMIN_ROLE
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  // User who is an admin
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //he will be do things based on the role he has
+  mentorsCreated   Mentor[]           @relation("mentorsCreated")
+  coursesCreated   Course[]           @relation("coursesCreated")
+  studentsCreated  Student[]          @relation("studentsCreated")
+  StudentsEnrolled CourseEnrollMent[] @relation("studentsEnrolled")
+
+  @@map("admins")
+}
+
+model Student {
   id        String   @id @default(cuid())
-  title     String
-  content   String
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // User who is a student
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Admin who created this student
+  AdminId String
+  Admin   Admin  @relation("studentsCreated", fields: [AdminId], references: [id])
+
+  // courses enrolled by this student
+  CourseEnrollMent CourseEnrollMent[]
+
+  @@map("students")
+}
+
+model Profile {
+  id         String   @id @default(cuid())
+  bio        String?
+  image      String?
+  location   String?
+  phone      String?
+  profession String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // User who has this profile
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Mentor {
+  id         String     @id @default(cuid())
+  mentorType MentorType @map("mentor_type") // mentor, trainer, advisor
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  // User who is a mentor
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Admin who created this mentor
+  AdminId String @map("admin_id")
+  Admin   Admin  @relation("mentorsCreated", fields: [AdminId], references: [id]) // Admin who created this mentor
+
+  @@map("mentors")
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String   @unique
+  description String
+  price       Float
+  duration    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Admin who created this course
+  Adminid String @map("admin_id")
+  Admin   Admin  @relation("coursesCreated", fields: [Adminid], references: [id])
+
+  // students enrolled in this course will be stored in CourseEnrollMent model
+  CourseEnrollMent CourseEnrollMent[]
+
+  @@map("courses")
+}
+
+model CourseEnrollMent {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  courseId  String  @map("course_id")
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  studentId String  @map("student_id")
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  // Admin who enrolled this student in this course
+  AdminId String
+  Admin   Admin  @relation("studentsEnrolled", fields: [AdminId], references: [id])
+
+  @@unique([courseId, studentId])
+  @@map("course_enrollments")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  email   String
+  token   String
+  expires DateTime
+
+  @@unique([email, token])
+  @@map("verificationtokens")
 }

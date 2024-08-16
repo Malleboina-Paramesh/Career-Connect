@@ -1,22 +1,30 @@
-import DemoForm from "@/components/DemoForm";
-import { db } from "@/utils/db";
-import { IUser } from "@local/types";
-import { Button } from "@local/ui/components/ui/button";
-import { Switch } from "@local/ui/components/ui/switch";
+import { auth } from "@/auth";
+import Logout from "@/components/Logout";
+import { Button } from "@local/ui/components/button";
+import Link from "next/link";
 
-export default async function Home() {
-  const users: IUser = {
-    id: 1,
-    name: "test",
-  };
-  const user = await db.user.findMany();
+export default async function Page() {
+  const session = await auth();
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen w-full flex justify-center items-center flex-col gap-4">
+        <h1>Landing Page</h1>
+        <p>Not logged in</p>
+        <Link href="/login">
+          <Button>Login for admins/mentors</Button>
+        </Link>
+        <Link href="/private">
+          <Button>Login for global admins</Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex justify-center items-center flex-col">
-      this is for the admins {JSON.stringify(users)}
-      {JSON.stringify(user)}
-      <Switch />
-      {process.env.BACKEND_BASE_URL}
-      <DemoForm />
+    <div className="min-h-screen w-full flex justify-center items-center flex-col">
+      <h1>Landing Page</h1>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+      <Logout />
     </div>
   );
 }

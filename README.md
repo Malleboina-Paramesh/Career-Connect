@@ -129,8 +129,14 @@ The project is organized into multiple workspaces:
    ```
 
 7. Push the schema to the database:
+
    ```
    pnpm db:push
+   ```
+
+8. Run this Script to generate Global Admin:
+   ```
+   pnpm db:seed
    ```
 
 ### For Frontend and Fullstack Developers

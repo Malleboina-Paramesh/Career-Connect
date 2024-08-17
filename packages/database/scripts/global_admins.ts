@@ -8,13 +8,18 @@ async function main() {
       email: "global@mail.com",
       emailVerified: new Date(),
       name: "Global Admin",
-      role: "GLOBAL_ADMIN",
+      role: "ADMIN",
       isVerified: true,
       Profile: {
         create: {
           phone: "1234567890",
           image:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtuphMb4mq-EcVWhMVT8FCkv5dqZGgvn_QiA&s",
+        },
+      },
+      Admin: {
+        create: {
+          role: "MASTER_ADMIN",
         },
       },
     },

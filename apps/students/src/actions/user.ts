@@ -45,14 +45,24 @@ export async function getUserByIdForJWT(id: string) {
             image: true,
           },
         },
+        Student: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
     if (!user) return null;
-
-    //structure the user object to {id,email,emailVerified,role,password,image}
+    console.log("User:", user);
+    //structure the user object to {id,email,emailVerified,role,password,image,realId}
+    let realId = user.Student?.id;
     const { Profile, ...remaining } = user;
 
-    return { ...remaining, image: Profile?.image || DEFAULT_PROFILE_IMAGE };
+    return {
+      ...remaining,
+      image: Profile?.image || DEFAULT_PROFILE_IMAGE,
+      realId,
+    };
   } catch (error) {
     return null;
   }

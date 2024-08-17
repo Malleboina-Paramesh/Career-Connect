@@ -9,6 +9,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      realId: string;
       email: string;
       role: string;
       image: string;
@@ -19,6 +20,7 @@ declare module "next-auth" {
   // Extend JWT to hold the extra user data
   interface JWT {
     id: string;
+    realId: string;
     email: string;
     role: string;
     image: string;
@@ -36,6 +38,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       const info = await getUserByIdForJWT(token.sub);
       if (!info) return token;
       token.id = info.id;
+      token.realId = info.realId;
       token.email = info.email;
       token.role = info.role;
       token.image = info.image;
@@ -57,6 +60,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       if (token.name && session.user) {
         session.user.name = token.name;
+      }
+      if (token.realId && session.user) {
+        session.user.realId = token.realId as string;
       }
 
       console.log("Session:", session);

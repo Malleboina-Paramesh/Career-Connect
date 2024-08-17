@@ -31,7 +31,7 @@ const CreationForm = () => {
       password: "",
       role: "MENTOR",
       name: "",
-      sub_role: "TRAINER",
+      sub_role: "ADVISOR_MENTOR",
     },
   });
 

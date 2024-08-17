@@ -41,7 +41,7 @@ const LoginForm = ({ description, title }: LoginFormProps) => {
       } else {
         toast.success("Login Successful", { id: "login" });
         // Redirect here if needed
-        router.push("/success");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Submission error:", error);

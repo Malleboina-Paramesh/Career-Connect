@@ -8,24 +8,24 @@ datasource db {
   // url      = "file:./dev.db" // for sqlite db
 }
 
+// top level roles
 enum Role {
-  GLOBAL_ADMIN
   ADMIN
   STUDENT
   MENTOR
 }
 
-enum MentorType {
-  MENTOR
-  TRAINER
-  ADVISOR
+enum AdminType {
+  MASTER_ADMIN // will have access to everything
+  MENTOR_ADMIN // will able to add mentors
+  STUDENT_ADMIN // will able ro add students
+  COURSE_ADMIN // can create courses
 }
 
-enum ADMIN_ROLE {
-  GLOBAL // will have access to everything
-  MENTOR // will able to add mentors
-  STUDENT // will able ro add students
-  COURSE // can create courses
+// mentor types
+enum MentorType {
+  TRAINER_MENTOR
+  ADVISOR_MENTOR
 }
 
 model User {
@@ -53,10 +53,10 @@ model User {
 }
 
 model Admin {
-  id        String     @id @default(cuid())
-  role      ADMIN_ROLE
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
+  id        String    @id @default(cuid())
+  role      AdminType
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
 
   // User who is an admin
   userId String @unique @map("user_id")
@@ -67,6 +67,7 @@ model Admin {
   coursesCreated   Course[]           @relation("coursesCreated")
   studentsCreated  Student[]          @relation("studentsCreated")
   StudentsEnrolled CourseEnrollMent[] @relation("studentsEnrolled")
+  Company          Company[]          @relation("companies") // companies created by this admin
 
   @@map("admins")
 }
@@ -86,6 +87,7 @@ model Student {
 
   // courses enrolled by this student
   CourseEnrollMent CourseEnrollMent[]
+  JobApplication   JobApplication[]
 
   @@map("students")
 }
@@ -121,7 +123,65 @@ model Mentor {
   AdminId String @map("admin_id")
   Admin   Admin  @relation("mentorsCreated", fields: [AdminId], references: [id]) // Admin who created this mentor
 
+  companys Company[] @relation("companies")
+
   @@map("mentors")
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  title       String   @unique
+  description String
+  location    String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Mentor who is managing this company
+  mentorId String? @map("mentor_id")
+  Mentor   Mentor? @relation("companies", fields: [mentorId], references: [id])
+
+  // or global admin can create companies
+  AdminId String? @map("admin_id")
+  Admin   Admin?  @relation("companies", fields: [AdminId], references: [id])
+
+  // jobs in this company
+  Jobs Job[] @relation("jobs")
+
+  @@map("companies")
+}
+
+model Job {
+  id            String   @id @default(cuid())
+  role          String
+  description   String
+  location      String
+  salary        Float
+  noOfOpenings  Int
+  lastDate      DateTime @map("last_date")
+  passedOutyear Int      @map("graduation_year")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Mentor who is managing this company
+  companyId      String           @map("company_id")
+  Company        Company          @relation("jobs", fields: [companyId], references: [id])
+  JobApplication JobApplication[]
+
+  @@map("jobs")
+}
+
+model JobApplication {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  jobId     String  @map("job_id")
+  job       Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  studentId String  @map("student_id")
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, studentId])
+  @@map("job_applications")
 }
 
 model Course {

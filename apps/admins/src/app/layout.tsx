@@ -20,8 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.className}>{children}</body>
-      <Toaster position="top-center" />
+      <body className={roboto.className}>
+        {children}
+        <Toaster position="top-center" />
+      </body>
     </html>
   );
 }

@@ -2,13 +2,13 @@
  * this is a list of routes that are public
  * @type {string[]}
  */
-export const PublicRoutes = ["/", "/contact"];
+export const PublicRoutes = ["/", "/contact", "/contact"];
 
 /**
  * this is a list of routes that require authentication
  * @type {string[]}
  */
-export const AuthRoutes = ["/login", "/logout"];
+export const AuthRoutes = ["/login"];
 
 /**
  * after a user logs in, they will be redirected to this route

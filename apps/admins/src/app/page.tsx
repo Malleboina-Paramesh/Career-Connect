@@ -25,6 +25,9 @@ export default async function Page() {
       <h1>Landing Page</h1>
       <pre>{JSON.stringify(session, null, 2)}</pre>
       <Logout />
+      <Link href="/access-management">
+        <Button>Go to Access management</Button>
+      </Link>
     </div>
   );
 }

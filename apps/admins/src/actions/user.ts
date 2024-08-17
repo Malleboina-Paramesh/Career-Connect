@@ -45,14 +45,33 @@ export async function getUserByIdForJWT(id: string) {
             image: true,
           },
         },
+        Admin: {
+          select: {
+            role: true,
+            id: true,
+          },
+        },
+        Mentor: {
+          select: {
+            mentorType: true,
+            id: true,
+          },
+        },
       },
     });
     if (!user) return null;
-
-    //structure the user object to {id,email,emailVerified,role,password,image}
+    console.log("User:", user);
+    //structure the user object to {id,email,emailVerified,role,password,image,subRole}
+    let role = user.Admin?.role || user.Mentor?.mentorType;
+    let realId = user.Admin?.id || user.Mentor?.id;
     const { Profile, ...remaining } = user;
 
-    return { ...remaining, image: Profile?.image || DEFAULT_PROFILE_IMAGE };
+    return {
+      ...remaining,
+      image: Profile?.image || DEFAULT_PROFILE_IMAGE,
+      subRole: role,
+      realId,
+    };
   } catch (error) {
     return null;
   }

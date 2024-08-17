@@ -34,14 +34,13 @@ const LoginForm = ({ description, title }: LoginFormProps) => {
   const onSubmit = async (formData: LoginFormData) => {
     try {
       toast.loading("Logging in...", { id: "login" });
-      console.log("Login attempt:", formData);
       const result = await loginUser(formData);
       if (result?.error) {
         toast.error(result.error, { id: "login" });
       } else {
         toast.success("Login Successful", { id: "login" });
         // Redirect here if needed
-        router.push("/success");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Submission error:", error);
@@ -49,52 +48,47 @@ const LoginForm = ({ description, title }: LoginFormProps) => {
     }
   };
   return (
-    <>
-      <div className="mx-auto grid w-[350px] gap-6 h-full">
-        <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-bold">{title}</h1>
-          <p className="text-balance text-muted-foreground">{description}</p>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                {...register("email")}
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" {...register("password")} />
-            </div>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Logging in..." : "Login"}
-            </Button>
-          </div>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link
-              href={`/contact?query=from-private-login`}
-              className="underline"
-            >
-              contact us
-            </Link>
-          </div>
-        </form>
+    <div className="mx-auto flex flex-col justify-center items-center ">
+      <div className="text-pretty text-center space-y-3 mb-7">
+        <h1 className="text-3xl font-bold">{title}</h1>
+        <p className="text-balance text-muted-foreground">{description}</p>
       </div>
-    </>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-4 min-w-full w-[400px]">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              {...register("email")}
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <div className="flex items-center">
+              <Label htmlFor="password">Password</Label>
+              <Link
+                href="/forgot-password"
+                className="ml-auto inline-block text-sm underline"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+            <Input id="password" type="password" {...register("password")} />
+          </div>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Logging in..." : "Login"}
+          </Button>
+        </div>
+        <div className="mt-4 text-center text-sm">
+          Don&apos;t have an account?{" "}
+          <Link href={`/contact?query=from-login`} className="underline">
+            contact us
+          </Link>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -11,7 +11,8 @@
     "db:studio": "prisma studio",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:seed": "ts-node ./scripts/global_admins.ts"
+    "db:seed": "ts-node ./scripts/global_admins.ts",
+    "db:reset": "prisma db push  --force-reset"
   },
   "keywords": [],
   "author": "",

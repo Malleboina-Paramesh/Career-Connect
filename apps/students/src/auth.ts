@@ -1,8 +1,8 @@
 import NextAuth, { DefaultSession } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { authConfig } from "./auth.config";
 import { db } from "./utils/db";
 import { getUserByIdForJWT } from "./actions/user";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 declare module "next-auth" {
   // Extend session to hold the extra user data

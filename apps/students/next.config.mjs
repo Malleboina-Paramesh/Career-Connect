@@ -7,7 +7,7 @@ const nextConfig = {
         hostname: "c8.alamy.com",
       },
       {
-        hostname: "encrypted-tbn0.gstatic.com",
+        hostname: "*",
       },
     ],
   },

@@ -1,12 +1,21 @@
 "use client";
 
 import { useGeneralStore } from "@/Providers/ContextProvider";
-import { Company } from "@local/database";
 import Link from "next/link";
 import { SearchCompanyByTitleType } from "../action";
+import Loading from "@/components/Loading";
 
 const JobResults = () => {
-  const { companies } = useGeneralStore();
+  const { companies, loading } = useGeneralStore();
+
+  if (loading.reason.includes("searching") && loading.loading) {
+    return (
+      <div className="w-full  flex-1 flex justify-center items-center">
+        <Loading />
+      </div>
+    );
+  }
+
   return (
     <div className="h-full w-full p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
       {companies.map((company) => (
@@ -50,9 +59,6 @@ const Job = ({ company }: { company: SearchCompanyByTitleType }) => {
             <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
               {company.jobs} {company.jobs === 1 ? "job" : "jobs"} available
             </p>
-            <span className="inline-block px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-full invisible group-hover:visible">
-              set goal
-            </span>
           </div>
         </div>
       </div>

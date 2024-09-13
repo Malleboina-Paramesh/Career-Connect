@@ -3,6 +3,7 @@ import Link from "next/link";
 import { db } from "@/utils/db";
 import ApplyButton from "../../_components/ApplyButton";
 import { auth } from "@/auth";
+import OpportunitiesHistory from "@/components/History";
 
 type JobProps = {
   id: string;
@@ -59,9 +60,10 @@ const JobsPage = async ({ params }: { params: { company: string } }) => {
   const user = await auth();
   if (!user) return null;
 
+  console.log(params.company);
+
   const jobs = await db.job.findMany({
     where: {
-      companyId: params.company,
       JobApplication: {
         none: {
           studentId: user.user.realId,
@@ -73,8 +75,11 @@ const JobsPage = async ({ params }: { params: { company: string } }) => {
     },
   });
 
+  console.log(jobs);
+
   return (
     <div className="mx-auto p-6 overflow-y-auto h-full">
+      <OpportunitiesHistory />
       <div className="mb-6">
         <Link
           href={`/opportunities/${params.company}`}

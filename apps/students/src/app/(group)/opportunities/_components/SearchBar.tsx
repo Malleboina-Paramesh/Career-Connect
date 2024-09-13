@@ -6,14 +6,16 @@ import { useEffect } from "react";
 import { searchCompanyByTitle } from "../action";
 
 const SearchBar = () => {
-  const { setSearch, search, companies, setCompanies } = useGeneralStore();
+  const { setSearch, search, companies, setCompanies, setLoading } =
+    useGeneralStore();
   console.log(companies);
 
   useEffect(() => {
     const searchResults = async () => {
+      setLoading({ reason: ["searching"], loading: true });
       const companies = await searchCompanyByTitle(search);
-      console.log("@@companies by search result --> ", companies);
       setCompanies(companies);
+      setLoading({ reason: [], loading: false });
     };
     searchResults();
   }, [search]);

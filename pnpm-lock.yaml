@@ -50,6 +50,9 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.20
         version: 5.0.0-beta.20(next@14.2.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+      next-themes:
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: ^18
         version: 18.2.0
@@ -154,6 +157,12 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.20
         version: 5.0.0-beta.20(next@14.2.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+      next-themes:
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      nextjs-toploader:
+        specifier: ^3.6.15
+        version: 3.6.15(next@14.2.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: ^18
         version: 18.2.0
@@ -3345,6 +3354,13 @@ packages:
       sass:
         optional: true
 
+  nextjs-toploader@3.6.15:
+    resolution: {integrity: sha512-DMxO0BiT+NbGU7E9A8U2+0e7rRbG9qozbk19DFXhKRc9wuhgTPR/u8zr2TevsbFtVxDb9mf8YHFz+oBgjMC+HA==}
+    peerDependencies:
+      next: '>= 6.0.0'
+      react: '>= 16.0.0'
+      react-dom: '>= 16.0.0'
+
   node-releases@2.0.18:
     resolution: {integrity: sha512-d9VeXT4SJ7ZeOqGX6R5EM022wpL+eWPooLI+5UpWn2jCT1aosUQEhQP214x33Wkwx3JQMvIm+tIoVOdodFS40g==}
 
@@ -3358,6 +3374,9 @@ packages:
   normalize-range@0.1.2:
     resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
     engines: {node: '>=0.10.0'}
+
+  nprogress@0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
 
   oauth4webapi@2.11.1:
     resolution: {integrity: sha512-aNzOnL98bL6izG97zgnZs1PFEyO4WDVRhz2Pd066NPak44w5ESLRCYmJIyey8avSBPOMtBjhF3ZDDm7bIb7UOg==}
@@ -5891,7 +5910,7 @@ snapshots:
       '@typescript-eslint/eslint-plugin': 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/parser': 7.18.0(eslint@8.57.0)(typescript@5.4.5)
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
-      eslint-import-resolver-alias: 1.1.2(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))
+      eslint-import-resolver-alias: 1.1.2(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0))
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
@@ -6645,7 +6664,7 @@ snapshots:
       eslint: 8.57.0
       eslint-plugin-turbo: 2.0.6(eslint@8.57.0)
 
-  eslint-import-resolver-alias@1.1.2(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)):
+  eslint-import-resolver-alias@1.1.2(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)):
     dependencies:
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
 
@@ -7625,6 +7644,14 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
+  nextjs-toploader@3.6.15(next@14.2.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      next: 14.2.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      nprogress: 0.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
   node-releases@2.0.18: {}
 
   normalize-package-data@2.5.0:
@@ -7637,6 +7664,8 @@ snapshots:
   normalize-path@3.0.0: {}
 
   normalize-range@0.1.2: {}
+
+  nprogress@0.2.0: {}
 
   oauth4webapi@2.11.1: {}
 

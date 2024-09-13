@@ -75,6 +75,7 @@ export const companyCreationSchema = z.object({
   title: z.string().min(2, {
     message: "title must be at least 2 characters.",
   }),
+  image: z.string().optional(),
   description: z.string().min(6, {
     message: "description must be at least 6 characters.",
   }),
@@ -95,6 +96,7 @@ export const jobCreationSchema = z.object({
   location: z.string().min(3, {
     message: "location must be at least 3 characters.",
   }),
+  images: z.string().optional(),
   salary: z.coerce.number(),
   passedOutYear: z.coerce.number(),
   lastDate: z.coerce.date(),

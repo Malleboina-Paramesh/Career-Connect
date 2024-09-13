@@ -25,6 +25,7 @@ export async function createCompany(values: CompanyCreationType) {
           location: values.location,
           title: values.title,
           mentorId: user.realId,
+          image: values.image || "",
         },
       });
       return { error: null, data: data };
@@ -35,6 +36,7 @@ export async function createCompany(values: CompanyCreationType) {
         location: values.location,
         title: values.title,
         AdminId: user.realId,
+        image: values.image || "",
       },
     });
     revalidatePath("/create");

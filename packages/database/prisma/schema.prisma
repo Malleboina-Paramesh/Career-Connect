@@ -133,6 +133,7 @@ model Company {
   title       String   @unique
   description String
   location    String
+  image       String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -157,6 +158,7 @@ model Job {
   location      String
   salary        Float
   noOfOpenings  Int
+  images        String?
   lastDate      DateTime @map("last_date")
   passedOutyear Int      @map("graduation_year")
   createdAt     DateTime @default(now()) @map("created_at")

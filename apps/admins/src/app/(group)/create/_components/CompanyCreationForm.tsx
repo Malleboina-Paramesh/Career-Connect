@@ -19,6 +19,7 @@ const CompanyCreationForm = () => {
       description: "",
       title: "",
       location: "",
+      image: "",
     },
   });
 
@@ -46,6 +47,18 @@ const CompanyCreationForm = () => {
     <div className="w-full  md:w-1/2 mx-auto mt-8 p-6 rounded-lg shadow-md space-y-4">
       <h1 className="font-bold text-2xl">Create Company</h1>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Input
+            {...form.register("image")}
+            placeholder="Company image"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {form.formState.errors.image && (
+            <p className="mt-1 text-sm text-red-600">
+              {form.formState.errors.image.message}
+            </p>
+          )}
+        </div>
         <div>
           <Input
             {...form.register("title")}

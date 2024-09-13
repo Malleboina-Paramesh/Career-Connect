@@ -2,7 +2,7 @@
  * this is a list of routes that are public
  * @type {string[]}
  */
-export const PublicRoutes = ["/", "/contact"];
+export const PublicRoutes = ["/", "/contact", "/about", "/thank-you"];
 
 /**
  * this is a list of routes that require authentication

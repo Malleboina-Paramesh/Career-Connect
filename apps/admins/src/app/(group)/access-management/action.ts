@@ -17,13 +17,17 @@ export async function createStudent(data: StudentCreationType) {
       const student = await db.user.create({
         data: {
           email: data.email,
-          name: data.name,
           password: data.password,
           role: "STUDENT",
           emailVerified: new Date(),
           Student: {
             create: {
               AdminId: user.realId,
+            },
+          },
+          Profile: {
+            create: {
+              name: data.name,
             },
           },
         },
@@ -49,13 +53,17 @@ export async function createMentorAdmin(data: MentorAdminCreationType) {
       const student = await db.user.create({
         data: {
           email: data.email,
-          name: data.name,
           password: data.password,
           role: "ADMIN",
           emailVerified: new Date(),
           Admin: {
             create: {
               role: "MENTOR_ADMIN",
+            },
+          },
+          Profile: {
+            create: {
+              name: data.name,
             },
           },
         },
@@ -81,13 +89,18 @@ export async function createStudentAdmin(data: StudentAdminCreationType) {
       const student = await db.user.create({
         data: {
           email: data.email,
-          name: data.name,
+
           password: data.password,
           role: "ADMIN",
           emailVerified: new Date(),
           Admin: {
             create: {
               role: "STUDENT_ADMIN",
+            },
+          },
+          Profile: {
+            create: {
+              name: data.name,
             },
           },
         },
@@ -113,7 +126,6 @@ export async function createMentor(data: MentorCreationType) {
       const student = await db.user.create({
         data: {
           email: data.email,
-          name: data.name,
           password: data.password,
           role: "MENTOR",
           emailVerified: new Date(),
@@ -121,6 +133,11 @@ export async function createMentor(data: MentorCreationType) {
             create: {
               mentorType: data.mentorType,
               AdminId: user.realId,
+            },
+          },
+          Profile: {
+            create: {
+              name: data.name,
             },
           },
         },

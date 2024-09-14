@@ -152,11 +152,9 @@ const CompanyDetailedPage = ({
               </Link>
             </Button>
 
-            <Button>
-              <Link
-                href={`/opportunities/${companyDetails.title}/jobs?applied=true`}
-              >
-                view applied jobs{" "}
+            <Button variant={"outline"}>
+              <Link href={`/contact?reason=${companyDetails.title}`}>
+                contact mentor
               </Link>
             </Button>
           </div>

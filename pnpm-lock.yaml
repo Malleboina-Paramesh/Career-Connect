@@ -151,6 +151,9 @@ importers:
       '@tabler/icons-react':
         specifier: ^3.12.0
         version: 3.12.0(react@18.2.0)
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       next:
         specifier: 14.2.5
         version: 14.2.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)

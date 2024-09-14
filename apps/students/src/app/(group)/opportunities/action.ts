@@ -4,18 +4,19 @@ import { auth } from "@/auth";
 import { db } from "@/utils/db";
 import { revalidatePath } from "next/cache";
 
-export async function applyForJob(jobId: string, companyId: string) {
+export async function applyForJob(jobId: string, company: string) {
   try {
     const user = await auth();
     if (!user?.user) return { error: "User not found" };
+
     await db.jobApplication.create({
       data: {
         studentId: user.user.realId,
         jobId,
       },
     });
-    revalidatePath("/opportunities");
-    revalidatePath(`/opportunities/${companyId}`);
+
+    revalidatePath(`/opportunities/${company}/jobs`);
     return { error: null };
   } catch (error) {
     console.log(error);
@@ -45,6 +46,7 @@ export async function searchCompanyByTitle(title: string) {
           },
         },
       },
+      take: 10,
     });
 
     const filteredData = companies.map((company) => ({
@@ -82,11 +84,11 @@ export async function companyDetailedInfo(title: string) {
           include: {
             user: {
               select: {
-                name: true,
                 email: true,
                 role: true,
                 Profile: {
                   select: {
+                    name: true,
                     image: true,
                     profession: true,
                     phone: true,
@@ -100,11 +102,11 @@ export async function companyDetailedInfo(title: string) {
           select: {
             user: {
               select: {
-                name: true,
                 email: true,
                 role: true,
                 Profile: {
                   select: {
+                    name: true,
                     image: true,
                     profession: true,
                     phone: true,
@@ -132,3 +134,56 @@ export async function companyDetailedInfo(title: string) {
 export type CompanyDetailedInfoType = Awaited<
   ReturnType<typeof companyDetailedInfo>
 >;
+
+export async function companyJobs(title: string, filter: "active" | "applied") {
+  try {
+    const session = await auth();
+    if (!session) return [];
+    const user = session.user;
+    const company = await db.company.findUnique({
+      where: {
+        title,
+      },
+      include: {
+        Jobs: {
+          include: {
+            JobApplication: {
+              select: {
+                studentId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!company) return [];
+
+    const jobs = company.Jobs.map((job) => ({
+      id: job.id,
+      role: job.role,
+      description: job.description,
+      location: job.location,
+      salary: job.salary,
+      noOfOpenings: job.noOfOpenings,
+      lastDate: job.lastDate,
+      passedOutyear: job.passedOutyear,
+      companyId: job.companyId,
+      company: company.title,
+      applied: job.JobApplication.some((app) => app.studentId === user.realId),
+      companyImage: company.image,
+      applyLink: job.applyLink,
+    }));
+
+    if (filter === "active") {
+      return jobs.filter((job) => new Date(job.lastDate) > new Date());
+    } else {
+      return jobs.filter((job) => job.applied);
+    }
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export type CompanyJobsType = Awaited<ReturnType<typeof companyJobs>>[0];

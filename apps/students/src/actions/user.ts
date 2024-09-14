@@ -37,11 +37,11 @@ export async function getUserByIdForJWT(id: string) {
       where: { id },
       select: {
         id: true,
-        name: true,
         email: true,
         role: true,
         Profile: {
           select: {
+            name: true,
             image: true,
           },
         },
@@ -62,6 +62,7 @@ export async function getUserByIdForJWT(id: string) {
       ...remaining,
       image: Profile?.image || DEFAULT_PROFILE_IMAGE,
       realId,
+      name: Profile?.name || "",
     };
   } catch (error) {
     return null;

@@ -15,7 +15,9 @@ import { createJob } from "../action";
 const JobCreationForm = ({ companyId }: { companyId: string }) => {
   const form = useForm<JobCreationType>({
     resolver: zodResolver(jobCreationSchema),
-    defaultValues: {},
+    defaultValues: {
+      applyLink: "",
+    },
   });
 
   async function onSubmit(values: JobCreationType) {
@@ -75,6 +77,18 @@ const JobCreationForm = ({ companyId }: { companyId: string }) => {
           {form.formState.errors.location && (
             <p className="mt-1 text-sm text-red-600">
               {form.formState.errors.location.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <Input
+            {...form.register("applyLink")}
+            placeholder="Job apply link"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {form.formState.errors.applyLink && (
+            <p className="mt-1 text-sm text-red-600">
+              {form.formState.errors.applyLink.message}
             </p>
           )}
         </div>

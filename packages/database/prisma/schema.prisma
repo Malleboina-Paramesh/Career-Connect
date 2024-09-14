@@ -30,7 +30,6 @@ enum MentorType {
 
 model User {
   id            String   @id @default(cuid())
-  name          String
   email         String   @unique
   emailVerified DateTime @map("email_verified")
   password      String?
@@ -94,6 +93,7 @@ model Student {
 
 model Profile {
   id         String   @id @default(cuid())
+  name       String?
   bio        String?
   image      String?
   location   String?
@@ -158,6 +158,7 @@ model Job {
   location      String
   salary        Float
   noOfOpenings  Int
+  applyLink     String   @map("apply_link")
   images        String?
   lastDate      DateTime @map("last_date")
   passedOutyear Int      @map("graduation_year")

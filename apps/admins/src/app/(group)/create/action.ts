@@ -69,6 +69,7 @@ export async function createJob(values: JobCreationType, companyId: string) {
         lastDate: values.lastDate,
         noOfOpenings: values.noOfOpenings,
         companyId: companyId,
+        applyLink: values.applyLink || "",
       },
     });
     revalidatePath(`/create/company/${companyId}`);

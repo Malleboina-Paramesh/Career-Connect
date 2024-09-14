@@ -101,6 +101,7 @@ export const jobCreationSchema = z.object({
   passedOutYear: z.coerce.number(),
   lastDate: z.coerce.date(),
   noOfOpenings: z.coerce.number(),
+  applyLink: z.string().optional(),
 });
 
 export type JobCreationType = z.infer<typeof jobCreationSchema>;

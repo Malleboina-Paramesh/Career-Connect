@@ -24,7 +24,7 @@ const OpportunitiesHistory = () => {
             <BreadcrumbItem key={i}>
               {path.length !== i + 1 ? (
                 <>
-                  <BreadcrumbLink>
+                  <BreadcrumbLink asChild>
                     <Link href={appendingPath}>{item}</Link>
                   </BreadcrumbLink>
                   <BreadcrumbSeparator />

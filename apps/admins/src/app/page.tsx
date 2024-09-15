@@ -13,9 +13,6 @@ export default async function Page() {
         <Link href="/login">
           <Button>Login for admins/mentors</Button>
         </Link>
-        <Link href="/private">
-          <Button>Login for global admins</Button>
-        </Link>
       </div>
     );
   }

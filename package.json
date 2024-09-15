@@ -17,7 +17,8 @@
     "db:up": "pnpm --filter @local/database db:up",
     "student:dev": "pnpm --filter students dev",
     "admin:dev": "pnpm --filter admins dev",
-    "db:seed": "pnpm --filter @local/database db:seed"
+    "db:seed": "pnpm --filter @local/database db:seed",
+    "db:reset": "pnpm --filter @local/database db:reset"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

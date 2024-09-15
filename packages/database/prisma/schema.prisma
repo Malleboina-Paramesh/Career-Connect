@@ -26,6 +26,7 @@ enum AdminType {
 enum MentorType {
   TRAINER_MENTOR
   ADVISOR_MENTOR
+  COMPANY_MENTOR
 }
 
 model User {
@@ -66,7 +67,7 @@ model Admin {
   coursesCreated   Course[]           @relation("coursesCreated")
   studentsCreated  Student[]          @relation("studentsCreated")
   StudentsEnrolled CourseEnrollMent[] @relation("studentsEnrolled")
-  Company          Company[]          @relation("companies") // companies created by this admin
+  // Company          Company[]          @relation("companies") // companies created by this admin
 
   @@map("admins")
 }
@@ -129,24 +130,31 @@ model Mentor {
 }
 
 model Company {
-  id          String   @id @default(cuid())
-  title       String   @unique
+  id          String @id @default(cuid())
+  title       String @unique
   description String
   location    String
-  image       String
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  logo        String
+  website     String
+  linkedin    String
+  process     String @default("") // interview process details
+  sections    String @default("")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Mentor who is managing this company
   mentorId String? @map("mentor_id")
   Mentor   Mentor? @relation("companies", fields: [mentorId], references: [id])
 
   // or global admin can create companies
-  AdminId String? @map("admin_id")
-  Admin   Admin?  @relation("companies", fields: [AdminId], references: [id])
+  // AdminId String? @map("admin_id")
+  // Admin   Admin?  @relation("companies", fields: [AdminId], references: [id])
 
   // jobs in this company
   Jobs Job[] @relation("jobs")
+  // Admin   Admin?  @relation(fields: [adminId], references: [id])
+  // adminId String?
 
   @@map("companies")
 }

@@ -15,22 +15,42 @@ import { FaEnvelope } from "react-icons/fa";
 import { IoAccessibilitySharp } from "react-icons/io5";
 import { IoMdCreate } from "react-icons/io";
 import { ThemeSwitch } from "../ThemeSwitch";
+import { AdminType, MentorType, Role } from "@local/database";
 
-const SidebarWrapper = ({ children }: { children: React.ReactNode }) => {
+interface IMenuItem {
+  icon: React.ElementType;
+  text: string;
+  href: string;
+  animation: string;
+  access: (AdminType | MentorType | "ALL")[];
+}
+
+const SidebarWrapper = ({
+  children,
+  role,
+  subRole,
+}: {
+  children: React.ReactNode;
+  role: Role;
+  subRole: AdminType | MentorType;
+}) => {
   const path = usePathname();
+
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const menuItems = [
+  const menuItems: IMenuItem[] = [
     {
       icon: RiDashboardHorizontalFill,
       text: "Dashboard",
       href: "dashboard",
       animation: "group-hover:animate-bounce",
+      access: ["ALL"],
     },
     {
       icon: CgProfile,
       text: "Profile",
       href: "profile",
       animation: "group-hover:animate-spin",
+      access: ["ALL"],
     },
     // {
     //   icon: FaArrowTrendUp,
@@ -38,18 +58,26 @@ const SidebarWrapper = ({ children }: { children: React.ReactNode }) => {
     //   href: "opportunities",
     //   animation: "group-hover:animate-bounce",
     // },
-    { icon: FaEnvelope, text: "Messages", href: "messages", access: [] },
+    {
+      icon: FaEnvelope,
+      text: "Messages",
+      href: "messages",
+      access: ["ALL"],
+      animation: "group-hover:animate-spin",
+    },
     {
       icon: IoAccessibilitySharp,
       text: "Access Control",
       href: "access-management",
-      access: [],
+      access: ["MASTER_ADMIN", "MENTOR_ADMIN", "STUDENT_ADMIN"],
+      animation: "group-hover:animate-spin",
     },
     {
       icon: IoMdCreate,
-      text: "Create",
-      href: "create",
-      access: [],
+      text: "company and opportunities",
+      href: "company-and-opportunities",
+      access: ["MASTER_ADMIN", "MENTOR_ADMIN", "COMPANY_MENTOR"],
+      animation: "group-hover:animate-spin",
     },
   ];
 
@@ -79,20 +107,24 @@ const SidebarWrapper = ({ children }: { children: React.ReactNode }) => {
         />
         <div className="font-bold text-2xl">LOGO</div>
         <div className="w-full flex flex-col gap-2">
-          {menuItems.map((item, index) => (
-            <Link
-              key={item.text}
-              href={`/${item.href}`}
-              className={cn(
-                "flex items-center gap-3 px-1 py-2  rounded-md border-2 transition-all duration-300 group",
-                path.includes(item.href) &&
-                  "bg-black text-white dark:bg-white dark:text-black "
-              )}
-            >
-              <item.icon className={`text-xl ${item.animation}`} />
-              <span>{item.text}</span>
-            </Link>
-          ))}
+          {menuItems
+            .filter(
+              (i) => i.access.includes(subRole) || i.access.includes("ALL")
+            )
+            .map((item, index) => (
+              <Link
+                key={item.text}
+                href={`/${item.href}`}
+                className={cn(
+                  "flex items-center gap-3 px-1 py-2  rounded-md border-2 transition-all duration-300 group",
+                  path.includes(item.href) &&
+                    "bg-black text-white dark:bg-white dark:text-black "
+                )}
+              >
+                <item.icon className={`text-xl ${item.animation}`} />
+                <span>{item.text}</span>
+              </Link>
+            ))}
         </div>
         <div className="flex  h-full w-full justify-between items-end">
           <Button

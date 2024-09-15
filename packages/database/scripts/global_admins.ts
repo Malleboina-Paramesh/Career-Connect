@@ -5,13 +5,14 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.user.create({
     data: {
-      email: "global@mail.com",
+      email: "global@gmail.com",
       emailVerified: new Date(),
-      name: "Global Admin",
       role: "ADMIN",
       isVerified: true,
+      password: "global",
       Profile: {
         create: {
+          name: "Global bro",
           phone: "1234567890",
           image:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtuphMb4mq-EcVWhMVT8FCkv5dqZGgvn_QiA&s",

@@ -5,7 +5,7 @@ const page = async () => {
   return (
     <div className=" w-full text-center">
       <h1 className="font-bold text-2xl">Dashboard</h1>
-      <p className="text-lg">Welcome {user.name}</p>
+      <p className="text-lg">Welcome {user.role}</p>
     </div>
   );
 };

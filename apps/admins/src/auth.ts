@@ -15,7 +15,7 @@ declare module "next-auth" {
       role: Role;
       image: string;
       name: string;
-      subRole: MentorType | AdminType | null;
+      subRole: MentorType | AdminType;
     } & DefaultSession["user"];
   }
 
@@ -25,7 +25,7 @@ declare module "next-auth" {
     realId: string;
     email: string;
     role: Role;
-    subRole: MentorType | AdminType | null;
+    subRole: MentorType | AdminType;
     image: string;
     name: string;
   }
@@ -66,7 +66,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.name = token.name;
       }
       if (token.subRole && session.user) {
-        session.user.subRole = token.subRole as MentorType | AdminType | null;
+        session.user.subRole = token.subRole as MentorType | AdminType;
       }
       if (token.realId && session.user) {
         session.user.realId = token.realId as string;

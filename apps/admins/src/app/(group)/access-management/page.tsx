@@ -18,14 +18,9 @@ const page = async () => {
         <div>
           <h1 className="text-2xl">Access Management</h1>
           <span className="text-sm text-gray-500">
-            add new users to the system and assign roles
+            add new users to the system and assign roles.
           </span>
         </div>
-        <AccessCreationForm
-          trigger={<Button>Add New User</Button>}
-          userRole={user.role}
-          userSubRole={user.subRole}
-        />
       </div>
       <div className="mt-3">
         <DetailsSection userRole={user.role} userSubRole={user.subRole} />

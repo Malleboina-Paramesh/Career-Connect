@@ -17,11 +17,15 @@ const page = async () => {
   ];
 
   return (
-    <div className="p-3">
+    <div className="">
       {access.includes(user.subRole) ? (
         <div className="flex flex-col gap-3 w-full h-full ">
           <div className="flex justify-between items-center">
-            <h1 className="font-bold text-3xl">Companys</h1>
+            <div>
+              <h1 className="font-bold text-2xl">Companys</h1>
+              <p className="text-sm text-gray-500">List of all companies</p>
+            </div>
+
             {user.subRole !== "COMPANY_MENTOR" ? (
               <Link href="/company-and-opportunities/create">
                 <Button>Add Company</Button>

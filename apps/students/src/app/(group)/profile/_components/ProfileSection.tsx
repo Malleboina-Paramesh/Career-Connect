@@ -51,7 +51,7 @@ const ProfileSection = () => {
       />
       <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4">
         <img
-          src={userProfile.profile.image || "/avatar.png"}
+          src={userProfile.profile.image || "https://via.placeholder.com/150"}
           alt={userProfile.profile.name || "User Image"}
           className="w-full h-full object-cover rounded-full"
         />

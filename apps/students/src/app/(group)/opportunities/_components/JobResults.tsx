@@ -37,16 +37,16 @@ const Job = ({ company }: { company: SearchCompanyByTitleType }) => {
         <div className="h-48 w-full relative overflow-hidden">
           <img
             alt={company.title}
-            src={company.image}
+            src={company.logo}
             className="w-full h-full object-cover transition-transform duration-300 transform hover:scale-110"
           />
-          <Link href={`/opportunities/${company.title}/jobs`}>
+          {/* <Link href={`/opportunities/${company.title}/jobs`}>
             <div className="absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300 opacity-0 hover:opacity-100 flex items-center justify-center">
               <span className="text-white text-lg font-bold px-4 py-2 bg-gray-900 bg-opacity-75 rounded-full">
                 View Jobs
               </span>
             </div>
-          </Link>
+          </Link> */}
         </div>
         <div className="p-5">
           <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">

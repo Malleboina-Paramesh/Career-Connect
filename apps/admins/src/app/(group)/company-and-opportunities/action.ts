@@ -488,6 +488,9 @@ export async function assignMentor(company: string, email: string) {
       where: {
         title: company,
       },
+      include: {
+        Mentor: true,
+      },
     });
 
     if (!companyData) {
@@ -504,6 +507,12 @@ export async function assignMentor(company: string, email: string) {
 
     if (!mentorData) {
       return { error: "mentor not found" };
+    }
+
+    if (companyData.Mentor) {
+      if (companyData.Mentor.id !== mentorData.id) {
+        return { error: "mentor already allocated to this company" };
+      }
     }
 
     await db.company.update({

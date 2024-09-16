@@ -32,6 +32,14 @@ const JobsPage = ({ company }: { company: string }) => {
     );
   }
 
+  if (!oppurtunities.length) {
+    return (
+      <div className="flex min-h-[calc(100vh-120px)] justify-center items-center">
+        <h1 className="text-2xl text-gray-800">No Jobs Found</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       {oppurtunities.map((job) => (

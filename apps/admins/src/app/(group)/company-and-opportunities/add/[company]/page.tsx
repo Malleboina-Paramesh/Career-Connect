@@ -3,8 +3,8 @@ import AddOrUpdateJob from "../../_components/AddOrUpdateJob";
 
 const page = ({ params }: { params: { company: string } }) => {
   return (
-    <div className="p-2">
-      <h1 className="text-3xl">Add a opportunities</h1>
+    <div className="">
+      <h1 className="text-2xl">Add a opportunities</h1>
       <p className="text-sm text-gray-500">
         Add a openning in {params.company} company
       </p>

@@ -19,7 +19,7 @@ enum AdminType {
   MASTER_ADMIN // will have access to everything
   MENTOR_ADMIN // will able to add mentors
   STUDENT_ADMIN // will able ro add students
-  COURSE_ADMIN // can create courses
+  // COURSE_ADMIN // can create courses
 }
 
 // mentor types
@@ -61,6 +61,9 @@ model Admin {
   // User who is an admin
   userId String @unique @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //who created this admin
+  createdBy String? @map("created_by")
 
   //he will be do things based on the role he has
   mentorsCreated   Mentor[]           @relation("mentorsCreated")

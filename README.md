@@ -122,19 +122,13 @@ The project is organized into multiple workspaces:
      - Change the `provider` to `"postgresql"`
    - To switch back to SQLite, reverse these changes.
 
-6. Generate types from schema:
-
-   ```
-   pnpm db:generate
-   ```
-
-7. Push the schema to the database:
+6. Push the schema to the database:
 
    ```
    pnpm db:push
    ```
 
-8. Run this Script to generate Global Admin:
+7. Run this Script to generate Global Admin:
    ```
    pnpm db:seed
    ```

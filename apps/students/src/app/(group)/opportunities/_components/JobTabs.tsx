@@ -11,7 +11,7 @@ const JobTabs = () => {
   const { setTab, tab } = useGeneralStore();
 
   return (
-    <Tabs defaultValue={tab}>
+    <Tabs defaultValue={tab} className="">
       <TabsList>
         <TabsTrigger value="active" onClick={() => setTab("active")}>
           Active Jobs

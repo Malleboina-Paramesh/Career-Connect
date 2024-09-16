@@ -14,9 +14,7 @@ const FormSection = ({ company }: { company: string }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      toast.loading("loading company data", {
-        id: "loading-company-data",
-      });
+
       const data = await getCompanyByTitle(company);
       if (data.error) {
         toast.error(data.error, {
@@ -32,9 +30,6 @@ const FormSection = ({ company }: { company: string }) => {
           process: data.data?.process || "",
           logo: data.data?.logo || "",
           sections: data.data?.sections || "",
-        });
-        toast.success("company data loaded", {
-          id: "loading-company-data",
         });
       }
       setLoading(false);

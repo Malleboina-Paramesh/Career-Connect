@@ -5,8 +5,8 @@ import JobsPage from "../../_components/JobsPage";
 
 const page = async ({ params }: { params: { company: string } }) => {
   return (
-    <div className="p-3 h-full w-full">
-      <div className="flex justify-between items-center">
+    <div className=" h-full w-full">
+      <div className="flex flex-col gap-2 md:flex-row  md:justify-between">
         <OpportunitiesHistory />
         <JobTabs />
       </div>

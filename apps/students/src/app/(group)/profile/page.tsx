@@ -3,7 +3,7 @@ import ProfileSection from "./_components/ProfileSection";
 
 const Page = () => {
   return (
-    <div className="p-6 h-full  mx-auto  flex flex-col gap-5">
+    <div className=" h-full  mx-auto  flex flex-col gap-5">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Left Column - User Info */}
         <ProfileSection />

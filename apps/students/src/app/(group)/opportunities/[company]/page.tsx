@@ -4,6 +4,11 @@ import Image from "next/image";
 import { Button } from "@local/ui/components/button";
 import Link from "next/link";
 import OpportunitiesHistory from "@/components/History";
+import { FaExternalLinkAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { FaGlobe, FaLinkedin } from "react-icons/fa6";
+import { BiLink } from "react-icons/bi";
+import { FcReading } from "react-icons/fc";
+import { RiHeading2 } from "react-icons/ri";
 
 const Page = async ({
   params,
@@ -31,135 +36,139 @@ const CompanyDetailedPage = ({
   companyDetails: NonNullable<CompanyDetailedInfoType>;
 }) => {
   return (
-    <div className="p-3">
+    <div className="max-w-7xl mx-auto space-y-3">
       <OpportunitiesHistory />
-      <div className="w-full flex items-start gap-3  mx-auto mt-2   text-gray-800 dark:text-gray-200">
-        <div className="flex-1">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <div className="flex items-center mb-4">
-              <Image
-                src={companyDetails.image || "/default-company-logo.png"}
-                alt={companyDetails.title}
-                width={64}
-                height={64}
-                className="rounded-full mr-4"
-              />
-              <h1 className="text-2xl font-bold">{companyDetails.title}</h1>
+
+      {/* Company Header */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+          <Image
+            src={companyDetails.logo || "/default-company-logo.png"}
+            alt={companyDetails.title}
+            width={120}
+            height={120}
+            className="rounded-full"
+          />
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex justify-between items-center mb-3">
+              <h1 className="text-2xl md:text-3xl font-bold">
+                {companyDetails.title}
+              </h1>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/opportunities/${companyDetails.title}/prepare`}
+                  className="group"
+                >
+                  <Button>
+                    Prepare{" "}
+                    <FaExternalLinkAlt className="inline ml-2 group-hover:animate-bounce" />
+                  </Button>
+                </Link>
+                <Link
+                  href={`/opportunities/${companyDetails.title}/jobs`}
+                  className="group"
+                >
+                  <Button>
+                    Jobs{" "}
+                    <FaExternalLinkAlt className="inline ml-2 group-hover:animate-bounce" />
+                  </Button>
+                </Link>
+              </div>
             </div>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {companyDetails.description}
             </p>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold mb-2">Located At</h2>
-              <ul className="list-disc list-inside">
-                {companyDetails.location.split(",").map((loc, index) => (
-                  <li key={index}>{loc.trim()}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold mb-4">Major Roles Offering</h2>
-            {companyDetails.Jobs.map((job, index) => (
-              <div key={job.id} className="mb-4">
-                <h3 className="text-lg font-semibold">
-                  {index + 1}. {job.role}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {job.description}
-                </p>
-                <p className="font-semibold">Offering {job.salary} LPA</p>
-              </div>
-            ))}
-          </div>
-          {/* TODO: need to add the data to the db (new table/fileds) ( for now its static data) */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-4">Rounds And Process</h2>
-            <ol className="list-decimal list-inside">
-              <li>Aptitude And Coding</li>
-              <li>Communication</li>
-              <li>HR</li>
-            </ol>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          {companyDetails.Mentor ? (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 min-w-80">
-              <h2 className="text-xl font-bold mb-4">Mentor</h2>
-              <div className="flex items-center">
-                <Image
-                  src={
-                    companyDetails.Mentor.user.Profile?.image ||
-                    "/default-avatar.png"
-                  }
-                  alt={companyDetails.Mentor.user.name || "Mentor"}
-                  width={64}
-                  height={64}
-                  className="rounded-full mr-4"
-                />
-                <div>
-                  <h3 className="text-lg font-semibold">
-                    {companyDetails.Mentor.user.name}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {companyDetails.Mentor.user.Profile?.profession}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {companyDetails.Mentor.user.email}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {companyDetails.Mentor.user.Profile?.phone}
-                  </p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              {/* <div className="flex items-center">
+                <FaMapMarkerAlt className="mr-2 text-gray-500" />
+                <span>{companyDetails.location}</span>
+              </div> */}
+              {companyDetails.website && (
+                <div className="flex items-center">
+                  <FaGlobe className="mr-2 text-gray-500" />
+                  <a
+                    href={companyDetails.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Website
+                  </a>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 min-w-80">
-              <h2 className="text-xl font-bold mb-4">Mentor</h2>
-              <div className="flex items-center">
-                <Image
-                  src={
-                    companyDetails.Admin!.user.Profile?.image ||
-                    "/default-avatar.png"
-                  }
-                  alt={companyDetails.Admin!.user.name || "Admin"}
-                  width={64}
-                  height={64}
-                  className="rounded-full mr-4"
-                />
-                <div>
-                  <h3 className="text-lg font-semibold">
-                    {companyDetails.Admin!.user.name}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {companyDetails.Admin!.user.Profile?.profession}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {companyDetails.Admin!.user.email}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {companyDetails.Admin!.user.Profile?.phone}
-                  </p>
+              )}
+              {companyDetails.linkedin && (
+                <div className="flex items-center">
+                  <FaLinkedin className="mr-2 text-gray-500" />
+                  <a
+                    href={companyDetails.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Linkedin
+                  </a>
                 </div>
-              </div>
+              )}
             </div>
-          )}
-          <div className="w-full flex flex-col gap-2 ">
-            <Button>
-              <Link href={`/opportunities/${companyDetails.title}/jobs`}>
-                view jobs
-              </Link>
-            </Button>
-
-            <Button variant={"outline"}>
-              <Link href={`/contact?reason=${companyDetails.title}`}>
-                contact mentor
-              </Link>
-            </Button>
           </div>
         </div>
       </div>
+
+      {/* company locations and roles */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold mb-4">Locations and Roles</h2>
+        <div className="space-y-4">{companyDetails.location}</div>
+      </div>
+
+      {/* other stuff */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold mb-4">What they provide ?</h2>
+        <div className="space-y-4">{companyDetails.sections}</div>
+      </div>
+
+      {/* Company Process */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold mb-4">Application Process</h2>
+        <div className="space-y-4">{companyDetails.process}</div>
+      </div>
+
+      {/* Mentor Information */}
+      {companyDetails.mentorId && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ">
+          <h2 className="text-2xl font-bold mb-4">Company Mentor</h2>
+          <div className="flex items-center gap-4">
+            <Image
+              src={
+                companyDetails.mentorImage || "https://via.placeholder.com/130"
+              }
+              alt={companyDetails.mentorName || "Mentor"}
+              width={130}
+              height={130}
+              className="rounded-full"
+            />
+            <div className="flex flex-col  md:flex-row md:items-center justify-between  gap-3 w-full">
+              <div>
+                <h3 className="text-xl md:text-4xl font-semibold">
+                  {companyDetails.mentorName}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {companyDetails.mentorEmail}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  {companyDetails.mentorProfession ||
+                    "Mentoring for this company since 2021 "}
+                </p>
+              </div>
+              <Link href={`/opportunities/${companyDetails.title}/mentor`}>
+                <Button>
+                  <BiLink className="inline mr-2" />
+                  <span>Connect</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,55 +1,34 @@
-import { getSessionUserDetails } from "@/utils/helpers";
-import { AdminType } from "@local/database";
-import React from "react";
-import StudentCreationForm from "./_components/StudentCreationForm";
-import MentorCreationForm from "./_components/MentorCreationForm";
-import MentorAdminCreationForm from "./_components/MentorAdminCreationForm";
-import StudentAdminCreationForm from "./_components/StudentAdminCreationForm";
+import { auth } from "@/auth";
+import AccessCreationForm from "./_components/AccessCreationForm";
+import { Button } from "@local/ui/components/button";
+import DetailsSection from "./_components/sections/DetailsSection";
 
 const page = async () => {
-  const user = await getSessionUserDetails();
+  const session = await auth();
+  if (!session) return <div>no access</div>;
+  const { user } = session;
 
-  const actions: { role: AdminType; message: string }[] = [
-    {
-      role: "MASTER_ADMIN",
-      message: "You can perform all actions",
-    },
-    {
-      role: "MENTOR_ADMIN",
-      message: "You can only add mentors",
-    },
-    {
-      role: "STUDENT_ADMIN",
-      message: "You can only add students",
-    },
-    {
-      role: "COURSE_ADMIN",
-      message: "You can only add courses",
-    },
-  ];
+  const access = ["MASTER_ADMIN", "MENTOR_ADMIN", "STUDENT_ADMIN"];
 
-  const responability = actions.find((action) => action.role === user.subRole);
-
-  if (!responability) {
-    return <div>no access</div>;
-  }
+  if (!access.includes(user.subRole)) return <div>no access</div>;
 
   return (
-    <div className=" w-full text-center space-y-3  overflow-scroll h-full">
-      <h1 className="font-bold text-2xl">Dashboard</h1>
-      <p className="font-serif">
-        {responability.message} as you are {responability.role}
-      </p>
-      <div className="flex flex-wrap w-full h-full  ">
-        {user.subRole === "STUDENT_ADMIN" ||
-          (user.subRole === "MASTER_ADMIN" && <StudentCreationForm />)}
-
-        {(user.subRole === "MENTOR_ADMIN" ||
-          user.subRole === "MASTER_ADMIN") && <MentorCreationForm />}
-
-        {user.subRole === "MASTER_ADMIN" && <MentorAdminCreationForm />}
-        {user.subRole === "MASTER_ADMIN" && <StudentAdminCreationForm />}
-        {/* TODO : Add Course Creation Form and make this form reusable */}
+    <div className="">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl">Access Management</h1>
+          <span className="text-sm text-gray-500">
+            add new users to the system and assign roles
+          </span>
+        </div>
+        <AccessCreationForm
+          trigger={<Button>Add New User</Button>}
+          userRole={user.role}
+          userSubRole={user.subRole}
+        />
+      </div>
+      <div className="mt-3">
+        <DetailsSection userRole={user.role} userSubRole={user.subRole} />
       </div>
     </div>
   );

@@ -68,48 +68,20 @@ export type SearchCompanyByTitleType = Awaited<
 
 export async function companyDetailedInfo(title: string) {
   try {
-    const company = await db.company.findUnique({
+    const company = await db.company.findFirst({
       where: {
         title,
       },
       include: {
-        Jobs: {
-          where: {
-            lastDate: {
-              gt: new Date(Date.now()),
-            },
-          },
-        },
         Mentor: {
           include: {
             user: {
-              select: {
-                email: true,
-                role: true,
+              include: {
                 Profile: {
                   select: {
                     name: true,
                     image: true,
                     profession: true,
-                    phone: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        Admin: {
-          select: {
-            user: {
-              select: {
-                email: true,
-                role: true,
-                Profile: {
-                  select: {
-                    name: true,
-                    image: true,
-                    profession: true,
-                    phone: true,
                   },
                 },
               },
@@ -121,10 +93,25 @@ export async function companyDetailedInfo(title: string) {
 
     if (!company) return null;
 
-    const locations = company.Jobs.map((job) => job.location);
-    company.location = locations.join(", ");
+    const filteredData = {
+      title: company.title,
+      logo: company.logo,
+      description: company.description,
+      website: company.website,
+      linkedin: company.linkedin,
+      location: company.location,
+      process: company.process,
+      sections: company.sections,
+      mentorId: company.Mentor?.id,
+      mentorName: company.Mentor?.user.Profile?.name,
+      mentorEmail: company.Mentor?.user.email,
+      mentorProfession: company.Mentor?.user.Profile?.profession,
+      mentorImage: company.Mentor?.user.Profile?.image,
+    };
 
-    return company;
+    console.log(filteredData);
+
+    return filteredData;
   } catch (error) {
     console.log(error);
     return null;
@@ -171,7 +158,7 @@ export async function companyJobs(title: string, filter: "active" | "applied") {
       companyId: job.companyId,
       company: company.title,
       applied: job.JobApplication.some((app) => app.studentId === user.realId),
-      companyImage: company.image,
+      companyImage: company.logo,
       applyLink: job.applyLink,
     }));
 

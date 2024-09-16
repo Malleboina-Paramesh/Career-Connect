@@ -87,7 +87,7 @@ const AddOrUpdateJob = ({
 
   return (
     <form className="space-y-2 " onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex gap-3 w-full h-full">
+      <div className="flex flex-col md:flex-row gap-3 w-full h-full">
         <div className="w-full space-y-2">
           <Input placeholder="Title" {...register("role")} />
           {errors.role && (

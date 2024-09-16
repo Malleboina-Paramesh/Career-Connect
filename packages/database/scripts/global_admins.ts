@@ -9,7 +9,7 @@ async function main() {
       emailVerified: new Date(),
       role: "ADMIN",
       isVerified: true,
-      password: "global",
+      password: "global@gmail.com",
       Profile: {
         create: {
           name: "Global bro",

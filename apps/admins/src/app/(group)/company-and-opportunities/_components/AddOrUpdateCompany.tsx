@@ -78,7 +78,7 @@ const AddOrUpdateCompany = ({ action }: { action: "add" | "update" }) => {
 
   return (
     <form className="space-y-2 " onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex gap-3 w-full h-full">
+      <div className="flex flex-col md:flex-row gap-3 w-full h-full">
         <div className="w-full space-y-2">
           <Input placeholder="Title" {...register("title")} />
           {errors.title && (
@@ -99,7 +99,7 @@ const AddOrUpdateCompany = ({ action }: { action: "add" | "update" }) => {
         </div>
         <div className="w-full space-y-2">
           <div>
-            <Input placeholder="Location" {...register("location")} />
+            <Textarea placeholder="Location" {...register("location")} />
             {errors.location && (
               <span className="text-red-500">{errors.location.message}</span>
             )}

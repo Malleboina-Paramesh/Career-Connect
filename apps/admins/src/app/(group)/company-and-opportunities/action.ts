@@ -472,6 +472,57 @@ export type MentorDetailsTypeByEmail = Awaited<
   ReturnType<typeof getMentorByEmail>
 >;
 
+export async function searchMentorsByEmail(email: string) {
+  try {
+    const session = await auth();
+    if (!session?.user) return { error: "not authorized", data: null };
+    const { user } = session;
+
+    const access: (MentorType | AdminType)[] = ["MASTER_ADMIN", "MENTOR_ADMIN"];
+
+    if (!access.includes(user.subRole)) {
+      return { error: "not authorized", data: null };
+    }
+
+    const data = await db.user.findMany({
+      where: {
+        email: {
+          contains: email,
+        },
+        Mentor: {
+          mentorType: "COMPANY_MENTOR",
+        },
+      },
+      include: {
+        Profile: true,
+        Mentor: true,
+      },
+    });
+
+    if (!data || data.length === 0) {
+      return { error: "mentor not found", data: null };
+    }
+
+    const mentors = data.map((item) => ({
+      name: item.Profile?.name,
+      phone: item.Profile?.phone,
+      email: item.email,
+      bio: item.Profile?.bio,
+      profession: item.Profile?.profession,
+      image: item.Profile?.image,
+    }));
+
+    return { error: null, data: mentors };
+  } catch (error) {
+    console.error(error);
+    return { error: "something went wrong", data: null };
+  }
+}
+
+export type MentorDetailsListType = Awaited<
+  ReturnType<typeof searchMentorsByEmail>
+>;
+
 export async function assignMentor(company: string, email: string) {
   try {
     const session = await auth();

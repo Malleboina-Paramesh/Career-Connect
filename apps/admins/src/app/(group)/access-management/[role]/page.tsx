@@ -17,9 +17,9 @@ const page = async ({
         add new users to the system and assign roles
       </p>
       <ScrollArea className="w-full  mt-3 overflow-x-auto">
-        {params.role === "mentors" && <MentorsDataSection />}
-        {params.role === "students" && <StudentsDataSection />}
-        {params.role === "admins" && <AdminsDataSection />}
+        {params.role === "mentor" && <MentorsDataSection />}
+        {params.role === "student" && <StudentsDataSection />}
+        {params.role === "admin" && <AdminsDataSection />}
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>

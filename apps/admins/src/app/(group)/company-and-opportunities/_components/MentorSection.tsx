@@ -15,6 +15,8 @@ import {
   MentorDetailsTypeByEmail,
   assignMentor,
   removeMentorByCompanyTitle,
+  MentorDetailsListType,
+  searchMentorsByEmail,
 } from "../action";
 import { Button } from "@local/ui/components/button";
 import { Input } from "@local/ui/components/input";
@@ -22,6 +24,7 @@ import { FaUser, FaEnvelope, FaPhone, FaBriefcase } from "react-icons/fa";
 import debounce from "lodash/debounce";
 import Image from "next/image";
 import { FaQuoteLeft } from "react-icons/fa6";
+import { ScrollArea, ScrollBar } from "@local/ui/components/scroll-area";
 
 const MentorSection = ({
   trigger,
@@ -43,16 +46,10 @@ const MentorSection = ({
   });
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [assign, setAssign] = useState<MentorDetailsTypeByEmail>({
+
+  const [mentors, setMentors] = useState<MentorDetailsListType>({
     error: null,
-    data: {
-      bio: "",
-      email: "",
-      image: "",
-      name: "",
-      phone: "",
-      profession: "",
-    },
+    data: [],
   });
   const [assignLoading, setAssignLoading] = useState(false);
 
@@ -70,8 +67,8 @@ const MentorSection = ({
     debounce(async (searchTerm) => {
       if (searchTerm) {
         setAssignLoading(true);
-        const data = await getMentorByEmail(searchTerm);
-        setAssign(data);
+        const data = await searchMentorsByEmail(searchTerm);
+        setMentors(data);
         setAssignLoading(false);
       }
     }, 500),
@@ -83,15 +80,13 @@ const MentorSection = ({
     return () => debouncedSearch.cancel();
   }, [search, debouncedSearch]);
 
-  const handleAssignMentor = async () => {
-    if (assign.data?.email) {
-      setAssignLoading(true);
-      await assignMentor(company, assign.data.email);
-      const updatedMentor = await getMentorByCompanyTitle(company);
-      setMentor(updatedMentor);
-      setAssignLoading(false);
-      setSearch("");
-    }
+  const handleAssignMentor = async (email: string) => {
+    setAssignLoading(true);
+    await assignMentor(company, email);
+    const updatedMentor = await getMentorByCompanyTitle(company);
+    setMentor(updatedMentor);
+    setAssignLoading(false);
+    setSearch("");
   };
 
   const removeMentor = async () => {
@@ -110,7 +105,10 @@ const MentorSection = ({
   };
 
   const MentorInfo = ({ data }: { data: any }) => (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+    <div
+      className="bg-white border border-gray-200 rounded-xl  overflow-hidden transition-all duration-300   hover:cursor-pointer hover:shadow-xl mb-6 "
+      onClick={() => handleAssignMentor(data.email)}
+    >
       <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">
         <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
           <Image
@@ -161,6 +159,7 @@ const MentorSection = ({
             Assign a new mentor or view current mentor details.
           </DialogDescription>
         </DialogHeader>
+
         <div className="mt-4">
           {loading ? (
             <div className="text-center py-4">
@@ -187,17 +186,21 @@ const MentorSection = ({
               />
               {assignLoading ? (
                 <div className="text-center py-2">Searching...</div>
-              ) : assign.data?.email ? (
-                <div className="space-y-4">
-                  <MentorInfo data={assign.data} />
-                  <Button
+              ) : mentors ? (
+                <ScrollArea className="h-96">
+                  {mentors.data?.map((mentor) => {
+                    return <MentorInfo key={mentor.email} data={mentor} />;
+                  })}
+
+                  {/* <Button
                     className="w-full"
                     onClick={handleAssignMentor}
                     disabled={assignLoading}
                   >
                     {assignLoading ? "Assigning..." : "Assign Mentor"}
-                  </Button>
-                </div>
+                  </Button> */}
+                  <ScrollBar />
+                </ScrollArea>
               ) : null}
             </div>
           )}

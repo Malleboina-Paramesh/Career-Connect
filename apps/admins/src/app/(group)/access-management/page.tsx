@@ -1,6 +1,4 @@
 import { auth } from "@/auth";
-import AccessCreationForm from "./_components/AccessCreationForm";
-import { Button } from "@local/ui/components/button";
 import DetailsSection from "./_components/sections/DetailsSection";
 
 const page = async () => {

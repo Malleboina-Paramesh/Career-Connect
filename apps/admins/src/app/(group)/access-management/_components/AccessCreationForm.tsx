@@ -46,13 +46,11 @@ const AccessCreationForm = ({
   userSubRole,
   trigger,
   role,
-  subRole,
 }: {
   userRole: string;
   userSubRole: string;
   trigger: React.ReactNode;
-  role?: string;
-  subRole?: string;
+  role: string;
 }) => {
   if (userRole !== "ADMIN") {
     return <div>You don't have access to this form.</div>;
@@ -64,15 +62,19 @@ const AccessCreationForm = ({
     formState: { errors, isSubmitting },
     watch,
     setValue,
+    getValues,
+    reset,
   } = useForm<AccessFormType>({
     resolver: zodResolver(AccessFormSchema),
     defaultValues: {
       name: "",
       email: "",
-      role: role as AccessFormType["role"] | undefined,
-      subRole: subRole as AccessFormType["subRole"] | undefined,
+      role: role as AccessFormType["role"],
+      subRole: undefined,
     },
   });
+
+  console.log(getValues("role"), getValues("subRole"));
 
   const [open, setOpen] = useState(false);
 
@@ -89,19 +91,21 @@ const AccessCreationForm = ({
       toast.success("User created successfully", {
         id: "creating-user",
       });
+
       setOpen(false);
+      reset();
     }
   };
 
-  const canAddRole = (role: string) => {
-    if (userSubRole === "MASTER_ADMIN") return true;
-    if (userSubRole === "STUDENT_ADMIN" && role === "STUDENT") return true;
-    if (userSubRole === "MENTOR_ADMIN" && role === "MENTOR") return true;
-    return false;
-  };
+  // const canAddRole = (role: string) => {
+  //   if (userSubRole === "MASTER_ADMIN") return true;
+  //   if (userSubRole === "STUDENT_ADMIN" && role === "STUDENT") return true;
+  //   if (userSubRole === "MENTOR_ADMIN" && role === "MENTOR") return true;
+  //   return false;
+  // };
 
   const selectedRole = watch("role");
-
+  console.log(errors);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -132,12 +136,14 @@ const AccessCreationForm = ({
             )}
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Select
               onValueChange={(value) =>
                 setValue("role", value as AccessFormType["role"])
               }
+              value={role}
             >
+
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
@@ -156,7 +162,7 @@ const AccessCreationForm = ({
             {errors.role && (
               <p className="text-sm text-red-500">{errors.role.message}</p>
             )}
-          </div>
+          </div> */}
 
           {selectedRole && selectedRole !== "STUDENT" && (
             <div className="space-y-2">
@@ -164,6 +170,7 @@ const AccessCreationForm = ({
                 onValueChange={(value) =>
                   setValue("subRole", value as AccessFormType["subRole"])
                 }
+                value={getValues("subRole")}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a sub-role" />

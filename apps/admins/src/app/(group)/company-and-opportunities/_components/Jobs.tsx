@@ -6,6 +6,13 @@ import { deleteJob, getJobsByCompany, JobResultsType } from "../action";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
+import { FcViewDetails } from "react-icons/fc";
+import { Button } from "@local/ui/components/button";
+import { CgViewList } from "react-icons/cg";
+import { BiLinkExternal } from "react-icons/bi";
+import Link from "next/link";
+
+// TODO : Need to redesign and add some students analytics
 
 const Jobs = ({ company }: { company: string }) => {
   const { setJobDraft } = useStore();
@@ -152,15 +159,17 @@ const Jobs = ({ company }: { company: string }) => {
             </div>
           </div>
           <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-between items-center">
-            <a
+            <Link
               href={job.applyLink}
               className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition duration-300 ease-in-out font-semibold"
               target="_blank"
-              rel="noopener noreferrer"
             >
-              Apply Now
-            </a>
-            <div className="space-x-2">
+              Apply Now <BiLinkExternal className="inline" />
+            </Link>
+
+            <div className="flex gap-2 items-center">
+              <CgViewList size={30} className="inline" />
+
               <button
                 onClick={() => {
                   setJobDraft({ ...job, images: job.images || "" });

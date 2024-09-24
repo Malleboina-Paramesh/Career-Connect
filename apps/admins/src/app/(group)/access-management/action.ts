@@ -205,6 +205,15 @@ export async function createAccess(data: AccessFormType) {
         data: null,
       };
 
+    if (data.role === "ADMIN" || data.role === "MENTOR") {
+      if (!data.subRole) {
+        return {
+          error: "add sub role",
+          data: null,
+        };
+      }
+    }
+
     if (data.email === user.email)
       return { error: "You cannot create an account for yourself", data: null };
 

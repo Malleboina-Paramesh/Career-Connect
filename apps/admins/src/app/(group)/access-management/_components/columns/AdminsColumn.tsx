@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { RiArrowUpDownFill } from "react-icons/ri";
 import { AdminTableDataType } from "../../action";
+import Actions from "../Actions";
 export const AdminsColumn: ColumnDef<AdminTableDataType[0]>[] = [
   {
     accessorKey: "name",
@@ -57,7 +58,7 @@ export const AdminsColumn: ColumnDef<AdminTableDataType[0]>[] = [
   {
     id: "actions",
     cell: ({ row: { original } }) => {
-      return "actions";
+      return <Actions id={original.id} />;
     },
   },
 ];

@@ -13,7 +13,7 @@ const page = ({
       <h1 className="text-2xl">Jobs</h1>
       <p className="text-sm text-gray-500">opennings in {params.company}</p>
       <div className="mt-3">
-        <Jobs company={params.company.replace("-", " ")} />
+        <Jobs company={decodeURIComponent(params.company)} />
       </div>
     </div>
   );

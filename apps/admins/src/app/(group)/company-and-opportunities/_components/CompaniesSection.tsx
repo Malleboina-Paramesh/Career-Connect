@@ -49,31 +49,6 @@ const CompaniesSection = ({ subRole }: { subRole: MentorType | AdminType }) => {
               alt={company.title}
               className="w-full h-full object-cover"
             />
-            {/* <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-              <div className="text-white space-x-4">
-                <ToolTip
-                  content="Edit"
-                  trigger={
-                    <MdOutlineEdit
-                      className="inline-block text-2xl cursor-pointer hover:text-blue-300"
-                      onClick={() => console.log("bro clicked me!!")}
-                    />
-                  }
-                />
-                <ToolTip
-                  content="Add a job"
-                  trigger={
-                    <IoMdAdd className="inline-block text-2xl cursor-pointer hover:text-green-300" />
-                  }
-                />
-                <ToolTip
-                  content="View jobs"
-                  trigger={
-                    <BsViewList className="inline-block text-2xl cursor-pointer hover:text-yellow-300" />
-                  }
-                />
-              </div>
-            </div> */}
           </div>
           <div className="p-4">
             <h1 className="font-bold text-xl mb-2  text-center">
@@ -84,7 +59,7 @@ const CompaniesSection = ({ subRole }: { subRole: MentorType | AdminType }) => {
                 content="Edit"
                 trigger={
                   <Link
-                    href={`/company-and-opportunities/edit/${company.title.replace(" ", "-")}`}
+                    href={`/company-and-opportunities/edit/${company.title}`}
                   >
                     <Button
                       size={"icon"}

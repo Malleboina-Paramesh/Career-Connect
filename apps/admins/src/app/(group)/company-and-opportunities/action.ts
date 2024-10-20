@@ -78,16 +78,24 @@ export async function createCompany(data: CompanyDraftType) {
       return { error: "company already exists" };
     }
 
+    const processedData: CompanyDraftType = {
+      ...data,
+      description: JSON.stringify(data.description),
+      location: JSON.stringify(data.location),
+      process: JSON.stringify(data.process),
+      sections: JSON.stringify(data.sections),
+    };
+
     await db.company.create({
       data: {
         title: data.title,
-        description: data.description,
-        location: data.location,
+        description: processedData.description,
+        location: processedData.location,
         website: data.website,
         linkedin: data.linkedin,
-        process: data.process,
+        process: processedData.process,
         logo: data.logo,
-        sections: data.sections,
+        sections: processedData.sections,
       },
     });
 
@@ -126,12 +134,20 @@ export async function updateCompany(data: CompanyDraftType) {
       return { error: "company not found" };
     }
 
+    const processedData: CompanyDraftType = {
+      ...data,
+      description: JSON.stringify(data.description),
+      location: JSON.stringify(data.location),
+      process: JSON.stringify(data.process),
+      sections: JSON.stringify(data.sections),
+    };
+
     await db.company.update({
       where: {
         title: data.title,
       },
       data: {
-        ...data,
+        ...processedData,
       },
     });
 
@@ -198,10 +214,12 @@ export async function createJob(company: string, data: JobDraftType) {
       return { error: "company not found" };
     }
 
+    const des = JSON.stringify(data.description);
+
     await db.job.create({
       data: {
         applyLink: data.applyLink,
-        description: data.description,
+        description: des,
         images: data.images,
         lastDate: data.lastDate,
         location: data.location,
@@ -236,6 +254,8 @@ export async function updateJob(company: string, data: JobDraftType) {
       return { error: "not authorized" };
     }
 
+    const des = JSON.stringify(data.description);
+
     const companyData = await db.company.findUnique({
       where: {
         title: company,
@@ -253,6 +273,7 @@ export async function updateJob(company: string, data: JobDraftType) {
       },
       data: {
         ...data,
+        description: des,
       },
     });
 

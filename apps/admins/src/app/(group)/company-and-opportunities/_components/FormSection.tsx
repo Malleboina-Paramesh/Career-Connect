@@ -22,14 +22,14 @@ const FormSection = ({ company }: { company: string }) => {
         });
       } else {
         setCompanyDraft({
-          description: data.data?.description || "",
+          description: JSON.parse(data.data?.description || ""),
           title: data.data?.title || "",
-          location: data.data?.location || "",
+          location: JSON.parse(data.data?.location || ""),
           website: data.data?.website || "",
           linkedin: data.data?.linkedin || "",
-          process: data.data?.process || "",
+          process: JSON.parse(data.data?.process || ""),
           logo: data.data?.logo || "",
-          sections: data.data?.sections || "",
+          sections: JSON.parse(data.data?.sections || ""),
         });
       }
       setLoading(false);

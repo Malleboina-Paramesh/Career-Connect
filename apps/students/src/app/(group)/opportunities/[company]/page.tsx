@@ -4,11 +4,26 @@ import Image from "next/image";
 import { Button } from "@local/ui/components/button";
 import Link from "next/link";
 import OpportunitiesHistory from "@/components/History";
-import { FaExternalLinkAlt, FaMapMarkerAlt } from "react-icons/fa";
-import { FaGlobe, FaLinkedin } from "react-icons/fa6";
+import {
+  FaExternalLinkAlt,
+  FaMapMarkerAlt,
+  FaGlobe,
+  FaLinkedin,
+} from "react-icons/fa";
 import { BiLink } from "react-icons/bi";
-import { FcReading } from "react-icons/fc";
-import { RiHeading2 } from "react-icons/ri";
+import Viewer from "@/components/editor/Viewer";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@local/ui/components/card";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@local/ui/components/avatar";
+import { Separator } from "@local/ui/components/separator";
 
 const Page = async ({
   params,
@@ -36,138 +51,151 @@ const CompanyDetailedPage = ({
   companyDetails: NonNullable<CompanyDetailedInfoType>;
 }) => {
   return (
-    <div className="max-w-7xl mx-auto space-y-3">
+    <div className="max-w-7xl mx-auto space-y-4">
       <OpportunitiesHistory />
 
       {/* Company Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-          <Image
-            src={companyDetails.logo || "/default-company-logo.png"}
-            alt={companyDetails.title}
-            width={120}
-            height={120}
-            className="rounded-full"
-          />
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex justify-between items-center mb-3">
-              <h1 className="text-2xl md:text-3xl font-bold">
-                {companyDetails.title}
-              </h1>
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/opportunities/${companyDetails.title}/prepare`}
-                  className="group"
-                >
-                  <Button>
-                    Prepare{" "}
-                    <FaExternalLinkAlt className="inline ml-2 group-hover:animate-bounce" />
-                  </Button>
-                </Link>
-                <Link
-                  href={`/opportunities/${companyDetails.title}/jobs`}
-                  className="group"
-                >
-                  <Button>
-                    Jobs{" "}
-                    <FaExternalLinkAlt className="inline ml-2 group-hover:animate-bounce" />
-                  </Button>
-                </Link>
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col space-y-6">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <Avatar className="w-24 h-24 flex-shrink-0">
+                <AvatarImage
+                  src={companyDetails.logo || "/default-company-logo.png"}
+                  alt={companyDetails.title}
+                />
+                <AvatarFallback>
+                  {companyDetails.title.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 text-center md:text-left">
+                <h1 className="text-3xl font-bold mb-4">
+                  {companyDetails.title}
+                </h1>
+                <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                  {companyDetails.website && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={companyDetails.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaGlobe className="mr-2" /> Website
+                      </a>
+                    </Button>
+                  )}
+                  {companyDetails.linkedin && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={companyDetails.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaLinkedin className="mr-2" /> LinkedIn
+                      </a>
+                    </Button>
+                  )}
+                  <Link
+                    href={`/opportunities/${companyDetails.title}/jobs`}
+                    className="group"
+                  >
+                    <Button variant="outline" size="sm">
+                      <FaExternalLinkAlt className="mr-2" /> Jobs
+                    </Button>
+                  </Link>
+                  <Link
+                    href={`/opportunities/${companyDetails.title}/prepare`}
+                    className="group"
+                  >
+                    <Button variant="outline" size="sm">
+                      <FaExternalLinkAlt className="mr-2" /> Prepare
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              {companyDetails.description}
-            </p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              {/* <div className="flex items-center">
-                <FaMapMarkerAlt className="mr-2 text-gray-500" />
-                <span>{companyDetails.location}</span>
-              </div> */}
-              {companyDetails.website && (
-                <div className="flex items-center">
-                  <FaGlobe className="mr-2 text-gray-500" />
-                  <a
-                    href={companyDetails.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Website
-                  </a>
-                </div>
-              )}
-              {companyDetails.linkedin && (
-                <div className="flex items-center">
-                  <FaLinkedin className="mr-2 text-gray-500" />
-                  <a
-                    href={companyDetails.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Linkedin
-                  </a>
-                </div>
-              )}
+            <Separator />
+            <div>
+              <h2 className="text-xl font-semibold mb-2">About</h2>
+              <Viewer content={JSON.parse(companyDetails.description)} />
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      {/* company locations and roles */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-4">Locations and Roles</h2>
-        <div className="space-y-4">{companyDetails.location}</div>
-      </div>
+      {/* Company Locations and Roles */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Locations and Roles</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Viewer content={JSON.parse(companyDetails.location)} />
+        </CardContent>
+      </Card>
 
-      {/* other stuff */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-4">What they provide ?</h2>
-        <div className="space-y-4">{companyDetails.sections}</div>
-      </div>
+      {/* What They Provide */}
+      <Card>
+        <CardHeader>
+          <CardTitle>What They Provide</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Viewer content={JSON.parse(companyDetails.sections)} />
+        </CardContent>
+      </Card>
 
-      {/* Company Process */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-4">Application Process</h2>
-        <div className="space-y-4">{companyDetails.process}</div>
-      </div>
+      {/* Application Process */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Application Process</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Viewer content={JSON.parse(companyDetails.process)} />
+        </CardContent>
+      </Card>
 
       {/* Mentor Information */}
       {companyDetails.mentorId && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ">
-          <h2 className="text-2xl font-bold mb-4">Company Mentor</h2>
-          <div className="flex items-center gap-4">
-            <Image
-              src={
-                companyDetails.mentorImage || "https://via.placeholder.com/130"
-              }
-              alt={companyDetails.mentorName || "Mentor"}
-              width={130}
-              height={130}
-              className="rounded-full"
-            />
-            <div className="flex flex-col  md:flex-row md:items-center justify-between  gap-3 w-full">
-              <div>
-                <h3 className="text-xl md:text-4xl font-semibold">
-                  {companyDetails.mentorName}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {companyDetails.mentorEmail}
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  {companyDetails.mentorProfession ||
-                    "Mentoring for this company since 2021 "}
-                </p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Mentor</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <Avatar className="w-24 h-24">
+                <AvatarImage
+                  src={
+                    companyDetails.mentorImage ||
+                    "https://via.placeholder.com/130"
+                  }
+                  alt={companyDetails.mentorName || "Mentor"}
+                />
+                <AvatarFallback>
+                  {companyDetails.mentorName?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 w-full">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-semibold">
+                    {companyDetails.mentorName}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {companyDetails.mentorEmail}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {companyDetails.mentorProfession ||
+                      "Mentoring for this company since 2021"}
+                  </p>
+                </div>
+                <Link href={`/opportunities/${companyDetails.title}/mentor`}>
+                  <Button>
+                    <BiLink className="mr-2" />
+                    Connect
+                  </Button>
+                </Link>
               </div>
-              <Link href={`/opportunities/${companyDetails.title}/mentor`}>
-                <Button>
-                  <BiLink className="inline mr-2" />
-                  <span>Connect</span>
-                </Button>
-              </Link>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

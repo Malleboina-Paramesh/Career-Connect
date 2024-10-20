@@ -11,7 +11,7 @@ const page = ({ params }: { params: { company: string } }) => {
       <div className="mt-3">
         <AddOrUpdateJob
           action="add"
-          company={params.company.replace("-", " ")}
+          company={decodeURIComponent(params.company)}
         />
       </div>
     </div>

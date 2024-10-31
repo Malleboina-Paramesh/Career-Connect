@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { loginUser } from "@/actions/login";
 import { useRouter } from "next/navigation";
+import { UAParser } from "ua-parser-js";
 
 interface LoginFormProps {
   title: string;
@@ -34,7 +35,20 @@ const LoginForm = ({ description, title }: LoginFormProps) => {
   const onSubmit = async (formData: LoginFormData) => {
     try {
       toast.loading("Logging in...", { id: "login" });
-      const result = await loginUser(formData);
+      console.log("Login attempt:", formData);
+      const parser = new UAParser();
+      const deviceInfo = parser.getResult();
+
+      const loginData = {
+        email: formData.email,
+        password: formData.password,
+        device: {
+          browser: deviceInfo.browser.name,
+          os: deviceInfo.os.name,
+          deviceType: deviceInfo.device.type || "Desktop",
+        },
+      };
+      const result = await loginUser(loginData as any);
       if (result?.error) {
         toast.error(result.error, { id: "login" });
       } else {

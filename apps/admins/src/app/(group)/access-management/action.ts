@@ -307,6 +307,28 @@ export async function createAccess(data: AccessFormType) {
         },
       });
     }
+
+    // If student creation is successful, send the email
+    const response = await fetch(
+      `${process.env.BACKEND_URL}${process.env.API_PATH}/email/credentials`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: data.email,
+          role: data.role,
+          subRole: data.subRole,
+          password: data.email,
+          loginLink:
+            (data.role === "ADMIN" || data.role === "MENTOR"
+              ? process.env.ADMIN_URL
+              : process.env.STUDENT_URL) + "/login",
+        }),
+      }
+    );
+    const res = await response.json();
+    console.log(res);
+
     return { error: null, data: createdUser };
   } catch (error) {
     console.log(error);

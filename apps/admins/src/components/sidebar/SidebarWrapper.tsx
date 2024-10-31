@@ -15,6 +15,7 @@ import { IoAccessibilitySharp } from "react-icons/io5";
 import { IoMdCreate } from "react-icons/io";
 import { ThemeSwitch } from "../ThemeSwitch";
 import { AdminType, MentorType, Role } from "@local/database";
+import { MdSubject } from "react-icons/md";
 
 interface IMenuItem {
   icon: React.ElementType;
@@ -50,6 +51,13 @@ const Layout = ({
       href: "profile",
       animation: "group-hover:animate-spin",
       access: ["ALL"],
+    },
+    {
+      icon: MdSubject,
+      text: "Courses",
+      href: "courses",
+      animation: "group-hover:animate-ping",
+      access: ["MASTER_ADMIN", "COURSE_ADMIN"],
     },
     {
       icon: FaEnvelope,

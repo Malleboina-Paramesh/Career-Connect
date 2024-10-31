@@ -1,8 +1,9 @@
 import NextAuth, { DefaultSession } from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { authConfig } from "./auth.config";
 import { db } from "./utils/db";
 import { getUserByIdForJWT } from "./actions/user";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { AdminType, Mentor, MentorType, Role } from "@local/database";
 
 declare module "next-auth" {
   // Extend session to hold the extra user data
@@ -11,9 +12,10 @@ declare module "next-auth" {
       id: string;
       realId: string;
       email: string;
-      role: string;
+      role: Role;
       image: string;
       name: string;
+      subRole: MentorType | AdminType;
     } & DefaultSession["user"];
   }
 
@@ -22,9 +24,19 @@ declare module "next-auth" {
     id: string;
     realId: string;
     email: string;
-    role: string;
+    role: Role;
+    subRole: MentorType | AdminType;
     image: string;
     name: string;
+    emailVerified: boolean;
+  }
+
+  // Extend User to hold the extra user data
+  interface User {
+    realId: string;
+    role: Role;
+    subRole: MentorType | AdminType;
+    emailVerified: Date | null;
   }
 }
 
@@ -33,40 +45,33 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   ...authConfig,
   callbacks: {
-    async jwt({ token }) {
-      if (!token.sub) return token;
-      const info = await getUserByIdForJWT(token.sub);
-      if (!info) return token;
-      token.id = info.id;
-      token.realId = info.realId;
-      token.email = info.email;
-      token.role = info.role;
-      token.image = info.image;
-      token.name = info.name;
+    async jwt({ token, user }) {
+      //adding extra data to the token (it happens when user login for the first time) then after that it will be added to the session
+      if (user) {
+        token.id = user.id; // user id
+        token.email = user.email;
+        token.role = user.role; // main role
+        token.subRole = user.subRole; // sub role
+        token.image = user.image;
+        token.name = user.name;
+        token.realId = user.realId; // either mentorId or adminId
+        token.emailVerified = user.emailVerified;
+      }
       return token;
     },
-    async session({ session, token, user }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
+    async session({ session, token, user, newSession, trigger }) {
+      if (token) {
+        session.user = {
+          id: token.id as string,
+          realId: token.realId as string,
+          email: token.email as string,
+          role: token.role as Role,
+          subRole: token.subRole as MentorType | AdminType,
+          image: token.image as string,
+          name: token.name as string,
+          emailVerified: token.emailVerified as Date | null,
+        };
       }
-      if (token.email && session.user) {
-        session.user.email = token.email;
-      }
-      if (token.role && session.user) {
-        session.user.role = token.role as string;
-      }
-      if (token.image && session.user) {
-        session.user.image = token.image as string;
-      }
-      if (token.name && session.user) {
-        session.user.name = token.name;
-      }
-      if (token.realId && session.user) {
-        session.user.realId = token.realId as string;
-      }
-
-      console.log("Session:", session);
-      console.log("Token:", token);
       return session;
     },
   },

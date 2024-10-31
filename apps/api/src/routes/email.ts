@@ -1,0 +1,60 @@
+import express from "express";
+import logger from "../utils/logger";
+import { Router } from "express";
+import { credentialsQueue, loginNotificationsQueue } from "../services/queues";
+
+const router = express.Router();
+
+// POST /api/email/credentials - Send email with login credentials
+router.post("/credentials", async (req, res) => {
+  const { to, password, loginLink, role, subRole } = req.body;
+  logger.info({ to, password, loginLink });
+  if (!to || !password || !loginLink) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  const subject = "Your Account Details";
+
+  try {
+    await credentialsQueue.add("credinatials", {
+      to,
+      subject,
+      loginLink,
+      password,
+      role,
+      subRole,
+    });
+    console.log("Email added to queue.", to);
+    res.status(200).json({ message: "Email added to queue." });
+  } catch (err) {
+    logger.error({ err }, "Failed to enqueue email.");
+    res.status(500).json({ message: "Failed to enqueue email." });
+  }
+});
+
+// POST /api/email/notification - new login notification
+router.post("/notification", async (req, res) => {
+  const { to, loginTime, device } = req.body;
+  logger.info({ to, loginTime, device }, "New login notification");
+  if (!to || !loginTime || !device) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  const subject = "New Login Detected";
+
+  try {
+    await loginNotificationsQueue.add("loginNotifications", {
+      to,
+      subject,
+      loginTime,
+      device,
+    });
+    logger.info("Email added to queue.");
+    res.status(200).json({ message: "Email added to queue." });
+  } catch (err) {
+    logger.error({ err }, "Failed to enqueue email.");
+    res.status(500).json({ message: "Failed to enqueue email." });
+  }
+});
+
+export const EmailRouter: Router = router;

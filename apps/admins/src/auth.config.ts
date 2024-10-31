@@ -6,6 +6,7 @@ import { getUserByEmailForAuth } from "./actions/user";
 export const authConfig = {
   providers: [
     credentials({
+      // @ts-ignore
       async authorize(credentials) {
         const isValid = LoginSchema.safeParse(credentials);
 
@@ -26,11 +27,18 @@ export const authConfig = {
           return null;
         }
 
+        console.log("User found:", user);
+
+        //it will go to jwt callback
         return {
           id: user.id,
           email: user.email,
           role: user.role,
+          realId: user.realId,
           image: user.image,
+          name: user.name,
+          subRole: user.subRole,
+          emailVerified: user.emailVerified,
         };
       },
     }),

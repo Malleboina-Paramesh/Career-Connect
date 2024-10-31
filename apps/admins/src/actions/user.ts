@@ -10,12 +10,25 @@ export async function getUserByEmailForAuth(email: string) {
       select: {
         id: true,
         email: true,
+        Mentor: {
+          select: {
+            id: true,
+            mentorType: true,
+          },
+        },
+        Admin: {
+          select: {
+            id: true,
+            role: true,
+          },
+        },
         emailVerified: true,
         role: true,
         password: true,
         Profile: {
           select: {
             image: true,
+            name: true,
           },
         },
       },
@@ -24,8 +37,22 @@ export async function getUserByEmailForAuth(email: string) {
 
     //structure the user object to {id,email,emailVerified,role,password,image}
     const { Profile, ...remaining } = user;
-
-    return { ...remaining, image: Profile?.image || DEFAULT_PROFILE_IMAGE };
+    console.log(
+      "@@@getUserByEmailForAuth called",
+      user.Admin?.id || user.Mentor?.id
+    );
+    //TODO : add password decryption and check
+    return {
+      image: Profile?.image || DEFAULT_PROFILE_IMAGE,
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      realId: user.Admin?.id || user.Mentor?.id,
+      name: user.Profile?.name || "User",
+      subRole: user.Admin?.role || user.Mentor?.mentorType,
+      emailVerified: user.emailVerified,
+      password: user.password,
+    };
   } catch (error) {
     return null;
   }
@@ -60,7 +87,7 @@ export async function getUserByIdForJWT(id: string) {
       },
     });
     if (!user) return null;
-    console.log("User:", user);
+    console.log("@@@getUserByIdForJWT called");
     //structure the user object to {id,email,emailVerified,role,password,image,subRole}
     let role = user.Admin?.role || user.Mentor?.mentorType;
     let realId = user.Admin?.id || user.Mentor?.id;

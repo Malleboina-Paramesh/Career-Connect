@@ -3,15 +3,37 @@
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 
-export async function loginUser(data: { email: string; password: string }) {
+export async function loginUser(data: {
+  email: string;
+  password: string;
+  device: { browser: string; os: string; deviceType: string };
+}) {
   try {
     console.log("Login attempt for:", data.email);
     const result = await signIn("credentials", {
       email: data.email,
       password: data.password,
-      redirect: false, // Handle redirection manually
+      redirect: false,
     });
+
     console.log("SignIn result:", result);
+
+    // Send login details and device information to the backend
+    await fetch(
+      `${process.env.BACKEND_URL}${process.env.API_PATH}/email/notification`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: data.email,
+          loginTime: new Date().toISOString(),
+          device: data.device,
+        }),
+      }
+    );
+
     return result;
   } catch (error) {
     console.error("Login error:", error);
@@ -23,6 +45,6 @@ export async function loginUser(data: { email: string; password: string }) {
           return { error: "Something went wrong!" };
       }
     }
-    throw error; // Rethrow if it's not an AuthError
+    throw error;
   }
 }

@@ -39,6 +39,7 @@ Connect students with career opportunities using our modern, scalable web platfo
 - Shadcn UI
 - Prisma ORM
 - PostgreSQL / SQLite
+- Redis
 - Node.js
 - Express.js
 - Tailwind CSS

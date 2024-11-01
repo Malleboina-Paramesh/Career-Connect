@@ -7,7 +7,8 @@ import CredintailsEmail from "../emails/CredintailsEmail";
 import dotenv from "dotenv";
 import LoginNotificationEmail from "../emails/LoginNotification";
 import { db } from "../utils/db";
-import JobNotificationEmailTemplate from "../emails/JobNotificationEmail";
+import JobNotificationEmail from "../emails/JobNotificationEmail";
+import { chunk } from "lodash";
 
 // Define the job data interface
 interface CredentialEmailJobData {
@@ -37,11 +38,13 @@ interface JobNotificationJobData {
 
 dotenv.config();
 
+const BATCH_SIZE = 50;
+
 export const credentialsWorker = new Worker<CredentialEmailJobData>(
   "credinatials",
   async (job: Job<CredentialEmailJobData>) => {
-    logger.info(`Processing job ${job.id}`);
     const { to, subject, loginLink, password, role, subRole } = job.data;
+    logger.info(`Processing job ${job.id} for ${to}`);
 
     const html = await render(
       CredintailsEmail({
@@ -61,16 +64,16 @@ export const credentialsWorker = new Worker<CredentialEmailJobData>(
       html,
     });
 
-    logger.info(`Email sent to ${to}`);
+    logger.info(`job ${job.id} completed for ${to} (credentials)`);
   },
   { connection: redis }
 );
 
 export const loginNotificationWorker = new Worker<LoginNotificationJobData>(
-  "loginNotification",
+  "loginNotifications",
   async (job: Job<LoginNotificationJobData>) => {
-    logger.info(`Processing job ${job.id}`);
     const { to, subject, loginTime, device } = job.data;
+    logger.info(`Processing job ${job.id} for ${to}`);
 
     const html = await render(
       LoginNotificationEmail({
@@ -88,7 +91,7 @@ export const loginNotificationWorker = new Worker<LoginNotificationJobData>(
       html,
     });
 
-    logger.info(`Email sent to ${to}`);
+    logger.info(`job ${job.id} completed for ${to} (login notification)`);
   },
   { connection: redis }
 );
@@ -96,16 +99,18 @@ export const loginNotificationWorker = new Worker<LoginNotificationJobData>(
 export const jobNotificationWorker = new Worker<JobNotificationJobData>(
   "jobNotifications",
   async (job: Job<JobNotificationJobData>) => {
-    logger.info(`Processing job ${job.id}`);
-    const { applyLink, companyId, companyName, jobLink, jobTitle, subject } =
-      job.data;
+    try {
+      logger.info(`Processing job ${job.id}`);
+      const { applyLink, companyId, companyName, jobTitle, subject } = job.data;
 
-    const students = await db.company.findMany({
-      where: {
-        id: companyId,
-      },
-      include: {
-        CompanyFavorite: {
+      // Optimize the database query
+      const recipientEmails = await db.companyFavorite
+        .findMany({
+          where: {
+            company: {
+              id: companyId,
+            },
+          },
           select: {
             student: {
               select: {
@@ -117,28 +122,63 @@ export const jobNotificationWorker = new Worker<JobNotificationJobData>(
               },
             },
           },
-        },
-      },
-    });
+        })
+        .then((favorites) =>
+          favorites.map((favorite) => favorite.student.user.email)
+        );
 
-    const recipientEmails = await students
-      .flatMap((company) => company.CompanyFavorite)
-      .map((favorite) => favorite.student.user.email);
+      if (recipientEmails.length === 0) {
+        logger.info("No subscribers found for this company");
+        return;
+      }
 
-    const html = await render(
-      JobNotificationEmailTemplate({ jobTitle, companyName, applyLink })
-    );
+      // Render email template once
+      const html = await render(
+        JobNotificationEmail({
+          jobTitle,
+          companyName,
+          applyLink,
+          appName: process.env.NAME,
+        })
+      );
 
-    await transporter.sendMail({
-      from: `${process.env.NAME} <${process.env.EMAIL_USER}>`,
-      bcc: recipientEmails,
-      subject,
-      html,
-    });
+      // Send emails in batches
+      const emailBatches = chunk(recipientEmails, BATCH_SIZE);
 
-    logger.info(`Email sent to all subscribed students`);
+      for (const [index, batch] of emailBatches.entries()) {
+        await transporter.sendMail({
+          from: `${process.env.NAME} <${process.env.EMAIL_USER}>`,
+          bcc: batch,
+          subject,
+          html,
+        });
+
+        logger.info(
+          `Sent batch ${index + 1}/${emailBatches.length} (${batch.length} recipients)`
+        );
+
+        // Add a small delay between batches to avoid rate limiting
+        if (index < emailBatches.length - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+
+      logger.info(
+        `Successfully sent emails to ${recipientEmails.length} subscribers`
+      );
+    } catch (error) {
+      logger.error("Error processing job notification:", error);
+      throw error; // Rethrow to trigger job retry
+    }
   },
-  { connection: redis }
+  {
+    connection: redis,
+    limiter: {
+      max: 5,
+      duration: 1000,
+    },
+    concurrency: 1,
+  }
 );
 
 credentialsWorker.on("completed", (job) => {
@@ -154,5 +194,13 @@ loginNotificationWorker.on("completed", (job) => {
 });
 
 loginNotificationWorker.on("failed", (job, err) => {
+  logger.error(`Job ${job?.id} failed with error: ${err.message}`);
+});
+
+jobNotificationWorker.on("completed", (job) => {
+  logger.info(`Job ${job.id} completed`);
+});
+
+jobNotificationWorker.on("failed", (job, err) => {
   logger.error(`Job ${job?.id} failed with error: ${err.message}`);
 });

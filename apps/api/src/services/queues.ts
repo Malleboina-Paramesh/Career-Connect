@@ -15,7 +15,7 @@ logger.info("jobsNotificationWorkder " + jobNotificationWorker.isRunning());
 export const credentialsQueue = new Queue("credinatials", {
   connection: redis,
 });
-export const loginNotificationsQueue = new Queue("loginNotification", {
+export const loginNotificationsQueue = new Queue("loginNotifications", {
   connection: redis,
 });
 export const jobNotificationQueue = new Queue("jobNotifications", {

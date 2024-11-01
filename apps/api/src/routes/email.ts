@@ -12,13 +12,11 @@ const router = express.Router();
 // POST /api/email/credentials - Send email with login credentials
 router.post("/credentials", async (req, res) => {
   const { to, password, loginLink, role, subRole } = req.body;
-  logger.info({ to, password, loginLink });
   if (!to || !password || !loginLink) {
     return res.status(400).json({ message: "All fields are required." });
   }
-
   const subject = "Your Account Details";
-
+  logger.info("/api/email/credentials");
   try {
     await credentialsQueue.add("credinatials", {
       to,
@@ -28,7 +26,7 @@ router.post("/credentials", async (req, res) => {
       role,
       subRole,
     });
-    console.log("Email added to queue.", to);
+    logger.info("Email added to queue " + to);
     res.status(200).json({ message: "Email added to queue." });
   } catch (err) {
     logger.error({ err }, "Failed to enqueue email.");
@@ -39,12 +37,13 @@ router.post("/credentials", async (req, res) => {
 // POST /api/email/notification - new login notification
 router.post("/notification", async (req, res) => {
   const { to, loginTime, device } = req.body;
-  logger.info({ to, loginTime, device }, "New login notification");
   if (!to || !loginTime || !device) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
   const subject = "New Login Detected";
+
+  logger.info("/api/email/notification");
 
   try {
     await loginNotificationsQueue.add("loginNotifications", {
@@ -53,7 +52,7 @@ router.post("/notification", async (req, res) => {
       loginTime,
       device,
     });
-    logger.info("Email added to queue.");
+    logger.info("Email added to queue." + to);
     res.status(200).json({ message: "Email added to queue." });
   } catch (err) {
     logger.error({ err }, "Failed to enqueue email.");
@@ -64,22 +63,14 @@ router.post("/notification", async (req, res) => {
 // POST /api/email/job-notification - new job notification
 router.post("/job-notification", async (req, res) => {
   const { jobTitle, companyId, jobLink, applyLink, companyName } = req.body;
-  logger.info({
-    jobTitle,
-    companyId,
-    jobLink,
-    applyLink,
-    companyName,
-  });
 
   logger.info({ jobTitle, companyId, jobLink, applyLink, companyName });
   if (!jobTitle || !companyId || !jobLink || !applyLink) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
-  logger.info("sending email");
-
   const subject = "New Job Notification from" + companyName;
+  logger.info("/api/email/job-notification");
 
   try {
     await jobNotificationQueue.add("jobNotifications", {

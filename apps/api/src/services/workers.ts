@@ -6,6 +6,8 @@ import { render } from "@react-email/components";
 import CredintailsEmail from "../emails/CredintailsEmail";
 import dotenv from "dotenv";
 import LoginNotificationEmail from "../emails/LoginNotification";
+import { db } from "../utils/db";
+import JobNotificationEmailTemplate from "../emails/JobNotificationEmail";
 
 // Define the job data interface
 interface CredentialEmailJobData {
@@ -22,6 +24,15 @@ interface LoginNotificationJobData {
   subject: string;
   loginTime: string;
   device: { browser: string; os: string; deviceType: string };
+}
+
+interface JobNotificationJobData {
+  subject: string;
+  jobTitle: string;
+  companyId: string;
+  jobLink: string;
+  applyLink: string;
+  companyName: string;
 }
 
 dotenv.config();
@@ -78,6 +89,54 @@ export const loginNotificationWorker = new Worker<LoginNotificationJobData>(
     });
 
     logger.info(`Email sent to ${to}`);
+  },
+  { connection: redis }
+);
+
+export const jobNotificationWorker = new Worker<JobNotificationJobData>(
+  "jobNotifications",
+  async (job: Job<JobNotificationJobData>) => {
+    logger.info(`Processing job ${job.id}`);
+    const { applyLink, companyId, companyName, jobLink, jobTitle, subject } =
+      job.data;
+
+    const students = await db.company.findMany({
+      where: {
+        id: companyId,
+      },
+      include: {
+        CompanyFavorite: {
+          select: {
+            student: {
+              select: {
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const recipientEmails = await students
+      .flatMap((company) => company.CompanyFavorite)
+      .map((favorite) => favorite.student.user.email);
+
+    const html = await render(
+      JobNotificationEmailTemplate({ jobTitle, companyName, applyLink })
+    );
+
+    await transporter.sendMail({
+      from: `${process.env.NAME} <${process.env.EMAIL_USER}>`,
+      bcc: recipientEmails,
+      subject,
+      html,
+    });
+
+    logger.info(`Email sent to all subscribed students`);
   },
   { connection: redis }
 );

@@ -41,8 +41,10 @@ export async function loginUser(data: {
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid Credentials" };
+        case "AccessDenied":
+          return { error: "Access Denied" };
         default:
-          return { error: "Something went wrong!" };
+          return { error: "Something went wrong! or no account" };
       }
     }
     throw error;

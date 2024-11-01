@@ -231,6 +231,28 @@ export async function createJob(company: string, data: JobDraftType) {
       },
     });
 
+    console.log("sending email");
+    console.log(
+      `${process.env.BACKEND_URL}${process.env.API_PATH}/email/job-notification`
+    );
+    await fetch(
+      `${process.env.BACKEND_URL}${process.env.API_PATH}/email/job-notification`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // jobTitle, companyId, jobLink, applyLink, companyName
+        body: JSON.stringify({
+          jobTitle: data.role,
+          companyId: companyData.id,
+          jobLink: `${process.env.STUDENT_URL}/company-and-opportunities/jobs/${company}`,
+          companyName: company,
+          applyLink: data.applyLink,
+        }),
+      }
+    );
+
     return { error: null };
   } catch (error) {
     console.error(error);

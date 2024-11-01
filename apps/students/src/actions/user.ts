@@ -10,16 +10,9 @@ export async function getUserByEmailForAuth(email: string) {
       select: {
         id: true,
         email: true,
-        Mentor: {
+        Student: {
           select: {
             id: true,
-            mentorType: true,
-          },
-        },
-        Admin: {
-          select: {
-            id: true,
-            role: true,
           },
         },
         emailVerified: true,
@@ -35,21 +28,22 @@ export async function getUserByEmailForAuth(email: string) {
     });
     if (!user) return null;
 
+    if (!user.Student) {
+      return null;
+    }
+
     //structure the user object to {id,email,emailVerified,role,password,image}
     const { Profile, ...remaining } = user;
-    console.log(
-      "@@@getUserByEmailForAuth called",
-      user.Admin?.id || user.Mentor?.id
-    );
+    console.log("@@@getUserByEmailForAuth called", user.Student.id);
     //TODO : add password decryption and check
     return {
       image: Profile?.image || DEFAULT_PROFILE_IMAGE,
       id: user.id,
       email: user.email,
       role: user.role,
-      realId: user.Admin?.id || user.Mentor?.id,
+      realId: user.Student.id,
       name: user.Profile?.name || "User",
-      subRole: user.Admin?.role || user.Mentor?.mentorType,
+      subRole: "STUDENT",
       emailVerified: user.emailVerified,
       password: user.password,
     };

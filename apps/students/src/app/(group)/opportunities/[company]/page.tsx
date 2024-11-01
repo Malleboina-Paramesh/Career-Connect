@@ -1,6 +1,9 @@
 import React from "react";
-import { companyDetailedInfo, CompanyDetailedInfoType } from "../action";
-import Image from "next/image";
+import {
+  companyDetailedInfo,
+  CompanyDetailedInfoType,
+  isFaviorated,
+} from "../action";
 import { Button } from "@local/ui/components/button";
 import Link from "next/link";
 import OpportunitiesHistory from "@/components/History";
@@ -24,6 +27,9 @@ import {
   AvatarImage,
 } from "@local/ui/components/avatar";
 import { Separator } from "@local/ui/components/separator";
+import { HeartIcon, HeartOff } from "lucide-react";
+import { BsHeartFill } from "react-icons/bs";
+import FaviorateButton from "./_components/FaviorateButton";
 
 const Page = async ({
   params,
@@ -33,6 +39,7 @@ const Page = async ({
   };
 }) => {
   const companyDetails = await companyDetailedInfo(params.company);
+
   if (!companyDetails) {
     return (
       <div className="text-center text-gray-800 dark:text-gray-200">
@@ -45,11 +52,12 @@ const Page = async ({
 
 export default Page;
 
-const CompanyDetailedPage = ({
+const CompanyDetailedPage = async ({
   companyDetails,
 }: {
   companyDetails: NonNullable<CompanyDetailedInfoType>;
 }) => {
+  const isFaviorate = await isFaviorated(companyDetails.id);
   return (
     <div className="max-w-7xl mx-auto space-y-4">
       <OpportunitiesHistory />
@@ -111,6 +119,10 @@ const CompanyDetailedPage = ({
                       <FaExternalLinkAlt className="mr-2" /> Prepare
                     </Button>
                   </Link>
+                  <FaviorateButton
+                    id={companyDetails.id}
+                    isFaviorate={isFaviorate}
+                  />
                 </div>
               </div>
             </div>

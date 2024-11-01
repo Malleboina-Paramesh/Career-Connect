@@ -94,6 +94,7 @@ export async function companyDetailedInfo(title: string) {
     if (!company) return null;
 
     const filteredData = {
+      id: company.id,
       title: company.title,
       logo: company.logo,
       description: company.description,
@@ -174,3 +175,64 @@ export async function companyJobs(title: string, filter: "active" | "applied") {
 }
 
 export type CompanyJobsType = Awaited<ReturnType<typeof companyJobs>>[0];
+
+export async function isFaviorated(companyId: string) {
+  try {
+    const session = await auth();
+    if (!session) return false;
+    const user = session.user;
+    const companyFaviorated = await db.companyFavorite.findFirst({
+      where: {
+        studentId: user.realId,
+        companyId,
+      },
+    });
+
+    return !!companyFaviorated;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function faviorateToCompany(companyId: string) {
+  try {
+    const session = await auth();
+    if (!session) return { error: "User not found", data: null };
+    const user = session.user;
+
+    const companyExists = await db.company.findUnique({
+      where: { id: companyId },
+    });
+
+    if (!companyExists) return { error: "Company not found", data: null };
+
+    const companyFaviorated = await db.companyFavorite.findFirst({
+      where: {
+        studentId: user.realId,
+        companyId,
+      },
+    });
+
+    if (companyFaviorated) {
+      await db.companyFavorite.delete({
+        where: {
+          id: companyFaviorated.id,
+        },
+      });
+    } else {
+      await db.companyFavorite.create({
+        data: {
+          studentId: user.realId,
+          companyId,
+        },
+      });
+    }
+
+    revalidatePath(`/opportunities/${companyExists.title}`);
+    return { error: null, data: !companyFaviorated };
+  } catch (error) {
+    console.log(error);
+    return { error: "Error while faviorating company", data: null };
+  }
+}

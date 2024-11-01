@@ -1,7 +1,11 @@
 import express from "express";
 import logger from "../utils/logger";
 import { Router } from "express";
-import { credentialsQueue, loginNotificationsQueue } from "../services/queues";
+import {
+  credentialsQueue,
+  jobNotificationQueue,
+  loginNotificationsQueue,
+} from "../services/queues";
 
 const router = express.Router();
 
@@ -48,6 +52,43 @@ router.post("/notification", async (req, res) => {
       subject,
       loginTime,
       device,
+    });
+    logger.info("Email added to queue.");
+    res.status(200).json({ message: "Email added to queue." });
+  } catch (err) {
+    logger.error({ err }, "Failed to enqueue email.");
+    res.status(500).json({ message: "Failed to enqueue email." });
+  }
+});
+
+// POST /api/email/job-notification - new job notification
+router.post("/job-notification", async (req, res) => {
+  const { jobTitle, companyId, jobLink, applyLink, companyName } = req.body;
+  logger.info({
+    jobTitle,
+    companyId,
+    jobLink,
+    applyLink,
+    companyName,
+  });
+
+  logger.info({ jobTitle, companyId, jobLink, applyLink, companyName });
+  if (!jobTitle || !companyId || !jobLink || !applyLink) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  logger.info("sending email");
+
+  const subject = "New Job Notification from" + companyName;
+
+  try {
+    await jobNotificationQueue.add("jobNotifications", {
+      jobTitle,
+      companyId,
+      jobLink,
+      applyLink,
+      companyName,
+      subject,
     });
     logger.info("Email added to queue.");
     res.status(200).json({ message: "Email added to queue." });

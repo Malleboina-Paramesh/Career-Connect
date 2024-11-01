@@ -59,7 +59,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    async session({ session, token, user, newSession, trigger }) {
+    async session({ session, token }) {
       if (token) {
         session.user = {
           id: token.id as string,
@@ -72,6 +72,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           emailVerified: token.emailVerified as Date | null,
         };
       }
+      console.log("@@@@@@@@@session", session);
       return session;
     },
   },

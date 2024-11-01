@@ -120,6 +120,7 @@ model Student {
   // courses enrolled by this student
   CourseEnrollMent CourseEnrollMent[]
   JobApplication   JobApplication[]
+  CompanyFavorite  CompanyFavorite[]
 
   @@map("students")
 }
@@ -184,11 +185,26 @@ model Company {
   // Admin   Admin?  @relation("companies", fields: [AdminId], references: [id])
 
   // jobs in this company
-  Jobs Job[] @relation("jobs")
+  Jobs            Job[]             @relation("jobs")
+  CompanyFavorite CompanyFavorite[] // students who favorited this company
   // Admin   Admin?  @relation(fields: [adminId], references: [id])
   // adminId String?
 
   @@map("companies")
+}
+
+model CompanyFavorite {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  companyId String  @map("company_id")
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  studentId String  @map("student_id")
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, studentId])
+  @@map("company_favorites")
 }
 
 model Job {

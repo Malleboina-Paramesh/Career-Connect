@@ -75,7 +75,7 @@ const Layout = ({
     },
     {
       icon: IoMdCreate,
-      text: "companies",
+      text: "Companies",
       href: "company-and-opportunities",
       access: ["MASTER_ADMIN", "MENTOR_ADMIN", "COMPANY_MENTOR"],
       animation: "group-hover:animate-spin",
@@ -107,7 +107,7 @@ const Layout = ({
             <FcMenu size={20} />
           </Button>
           <Link
-            href={"/dashboard"}
+            href={"/"}
             className="font-bold text-2xl font-mono animate-bounce"
           >
             Career

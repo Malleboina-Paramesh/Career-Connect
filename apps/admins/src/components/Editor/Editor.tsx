@@ -3,6 +3,7 @@ import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
+import { truncate } from "lodash";
 import { useTheme } from "next-themes";
 
 interface EditorProps {
@@ -16,6 +17,7 @@ export default function Editor({ content, setContent }: EditorProps) {
   const editor = useCreateBlockNote({
     animations: true,
     initialContent: content,
+    defaultStyles: true
   });
 
   return (

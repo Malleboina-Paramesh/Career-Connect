@@ -42,24 +42,34 @@ export default JobResults;
 
 const Job = ({ company }: { company: SearchCompanyByTitleType }) => {
   return (
-    <Card className="h-full transition-all duration-300 hover:shadow-lg overflow-hidden">
-      <CardHeader className="p-0">
-        <div className="h-40 w-full relative overflow-hidden">
-          <Avatar className="w-full h-full rounded-none">
-            <AvatarImage
-              src={company.logo}
-              alt={company.title}
-              className="object-cover"
-            />
-            <AvatarFallback className="text-4xl font-bold">
-              {company.title.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      </CardHeader>
-      <CardContent className="p-4 space-y-4">
+    <Card className="h-full relative flex flex-col sm:flex-row transition-all duration-300 hover:shadow-lg overflow-hidden">
+      {/* Thumbnail Section */}
+      <div className="sm:w-1/3 h-40 sm:h-auto relative overflow-hidden">
+        <Avatar className="w-full h-full rounded-none">
+          <AvatarImage
+            src={company.logo}
+            alt={company.title}
+            className="object-cover"
+          />
+          <AvatarFallback className="text-4xl font-bold">
+            {company.title.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
+      {/* Info Section */}
+      <div className="sm:w-2/3 p-4 space-y-4 flex flex-col">
+        {/* Jobs Notification Badge */}
+        <Badge
+          variant="secondary"
+          className="absolute top-2 right-2 flex items-center text-xs"
+        >
+          {company.jobs}
+          {company.jobs === 1 ? " job" : " jobs"}
+        </Badge>
+
         <h3 className="font-semibold text-lg line-clamp-1">{company.title}</h3>
-        <div className="flex space-x-2 justify-between">
+        <div className="flex space-x-2">
           {company.linkedin && (
             <Link
               href={company.linkedin}
@@ -83,18 +93,14 @@ const Job = ({ company }: { company: SearchCompanyByTitleType }) => {
             </Link>
           )}
         </div>
-      </CardContent>
-      <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <Badge variant="secondary" className="flex items-center">
-          <Briefcase className="w-3 h-3 mr-1" />
-          {company.jobs} {company.jobs === 1 ? "job" : "jobs"}
-        </Badge>
-        <Link href={`/opportunities/${company.title}`}>
-          <Button variant="link" className="text-sm">
-            View details →
-          </Button>
-        </Link>
-      </CardFooter>
+        <div className="mt-auto">
+          <Link href={`/opportunities/${company.title}`}>
+            <Button variant="link" className="text-sm">
+              View details →
+            </Button>
+          </Link>
+        </div>
+      </div>
     </Card>
   );
 };

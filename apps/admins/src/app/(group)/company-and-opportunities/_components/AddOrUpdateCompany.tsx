@@ -200,36 +200,32 @@ const AddOrUpdateCompany = ({ action }: { action: "add" | "update" }) => {
           <Label htmlFor="locations" className="font-bold text-xl">
             Locations <span className="text-red-600">*</span>
           </Label>
-          <div className="border-dashed border-2 rounded-md px-9">
-            <Editor
-              content={getValues("location") || undefined}
-              setContent={(data) => setValue("location", data)}
-            />
-          </div>
+          <Editor
+            content={getValues("location") || undefined}
+            setContent={(data) => setValue("location", data)}
+          />
         </div>
         {/* process */}
         <div className="space-y-1 ">
           <Label htmlFor="process" className="font-bold text-xl">
             Process <span className="text-red-600">*</span>
           </Label>
-          <div className="border-dashed border-2 rounded-md px-9">
-            <Editor
-              content={getValues("process") || undefined}
-              setContent={(data) => setValue("process", data)}
-            />
-          </div>
+
+          <Editor
+            content={getValues("process") || undefined}
+            setContent={(data) => setValue("process", data)}
+          />
         </div>
         {/* sections */}
         <div className="space-y-1 ">
           <Label htmlFor="sections" className="font-bold text-xl">
             Sections <span className="text-red-600">*</span>
           </Label>
-          <div className="border-dashed border-2 rounded-md px-9">
-            <Editor
-              content={getValues("sections") || undefined}
-              setContent={(data) => setValue("sections", data)}
-            />
-          </div>
+
+          <Editor
+            content={getValues("sections") || undefined}
+            setContent={(data) => setValue("sections", data)}
+          />
         </div>
       </div>
       <Button type="submit" className="w-full" disabled={isSubmitting}>
